@@ -12,21 +12,24 @@ bugreport(log):
 #define SCREEN_H
 
 #include <SDL2/SDL.h>
+#include <string>
 
 class Screen {
 
   public:
     //constructor & destructor
     //==========================
-    Screen(Uint32 width=640, Uint32 height=480);
+    Screen(Uint32 width=640, Uint32 height=480, const std::string& title="SDL2", bool full_screen = false);
     ~Screen();
 
     //public members
     //==============
     void handle_events();
     void clear();
+    void setFullscreen(bool fs);
     void draw(bool present=true);
     SDL_Renderer* getRenderer(){ return renderer; }
+    SDL_Window* getWindow(){ return window; }
 
     // fast pixel with color and alpha
     void pixel(Uint32 x, Uint32 y, Uint32 red, Uint32 green, Uint32 blue, Uint32 alpha=SDL_ALPHA_OPAQUE);
@@ -60,6 +63,8 @@ class Screen {
     //==============
     bool fullscreen;
     bool running;
+    std::string window_title;
+
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;

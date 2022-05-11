@@ -49,7 +49,7 @@ void showAbout() {
 int main(int argc, char **argv) {
   showAbout();
 
-  Screen screen(640, 400);
+  Screen screen(640, 400, "Tiny 3D Engine");
   BMText out(screen);
   TurtleCube turtle_cube(screen);
   Cube cube(screen);
@@ -77,7 +77,8 @@ int main(int argc, char **argv) {
 
     donut.rotate(ax, ay, az);
     donut.draw(1);
-    //// donut.draw_rotated_points();
+    // donut.draw_rotated_points();
+    screen.setColor(90, 170, 255);
     out.print(10, 10, "Torus");
 
     // beker.rotate(ax,ay,az);
@@ -87,9 +88,8 @@ int main(int argc, char **argv) {
     // logo.rotate(ax,ay,az);
     // logo.draw_edges();
 
-    screen.setColor(240, 240, 40);
-    out.print_wavy(screen.width - 200, screen.height - 20,
-                   "Programmed by Walter Schreppers");
+    screen.setColor(90, 170, 255);
+    out.print_wavy(screen.width - 200, screen.height - 20, "Programmed by Walter Schreppers");
     // SDL_Delay(200);
 
     screen.draw();

@@ -10,6 +10,7 @@ bugreport(log):
 
 #include "screen.h"
 #include <iostream>
+#include <string>
 
 /*-----------------------------------------------------------------------------
 name        : init
@@ -23,7 +24,7 @@ void Screen::init() {
   SDL_Init(SDL_INIT_EVERYTHING);
 
   window =
-      SDL_CreateWindow("SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      SDL_CreateWindow(this->window_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                        width, height, SDL_WINDOW_SHOWN);
 
   // the VSYNC makes it cap at 60fps (or whatever the screen refresh is) and
@@ -35,8 +36,8 @@ void Screen::init() {
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                               SDL_TEXTUREACCESS_STREAMING, width, height);
 
-  fullscreen = false;
   running = true;
+  setFullscreen(this->fullscreen);
 }
 
 /*-----------------------------------------------------------------------------
@@ -47,11 +48,13 @@ return      :
 exceptions  :
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-Screen::Screen(Uint32 width, Uint32 height) {
+Screen::Screen(Uint32 width, Uint32 height, const std::string& title, bool full_screen) {
   this->width = width;
   this->height = height;
   this->center_x = width / 2;
   this->center_y = height / 2;
+  this->window_title = title;
+  this->fullscreen = full_screen;
 
   window = NULL;
   renderer = NULL;
@@ -78,6 +81,16 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
+void Screen::setFullscreen(bool fs){
+  if (fs) {
+    SDL_SetWindowFullscreen(window,
+                            // SDL_WINDOW_FULLSCREEN);
+                            SDL_WINDOW_FULLSCREEN_DESKTOP);
+  } else {
+    SDL_SetWindowFullscreen(window, 0);
+  }
+}
+
 void Screen::handle_events() {
 
   while (SDL_PollEvent(&event)) {
@@ -88,13 +101,7 @@ void Screen::handle_events() {
     case SDL_KEYDOWN: // SDL_KEYUP also exists
       if (event.key.keysym.scancode == SDL_SCANCODE_F) {
         fullscreen = !fullscreen;
-        if (fullscreen) {
-          SDL_SetWindowFullscreen(window,
-                                  // SDL_WINDOW_FULLSCREEN);
-                                  SDL_WINDOW_FULLSCREEN_DESKTOP);
-        } else {
-          SDL_SetWindowFullscreen(window, 0);
-        }
+        setFullscreen(fullscreen); 
       }
       if (event.key.keysym.scancode == SDL_SCANCODE_Q) {
         running = SDL_FALSE;
