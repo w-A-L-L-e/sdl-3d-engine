@@ -1,6 +1,6 @@
 /*=============================================================================
 author        : Walter Schreppers
-filename      : bmtext.cpp
+filename      : turbotext.cpp
 created       : 2/5/2022 at 23:42:16
 modified      : 
 version       : 
@@ -8,7 +8,7 @@ copyright     : Walter Schreppers
 bugreport(log): 
 =============================================================================*/
 
-#include "bmtext.h"
+#include "turbotext.h"
 #include <iostream>
 #include <numeric>
 
@@ -22,7 +22,7 @@ return      : void
 exceptions  : 
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-void BMText::init(){
+void TurboText::init(){
   initFont();
 
   for(int i=0;i<64;i++){
@@ -32,33 +32,33 @@ void BMText::init(){
 
 
 /*-----------------------------------------------------------------------------
-name        : BMText
+name        : TurboText
 description : constructor
 parameters  : 
 return      : 
 exceptions  : 
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-BMText::BMText(Screen& scr){
+TurboText::TurboText(Screen& scr){
   screen = &scr;
   init();
 }
 
 
 /*-----------------------------------------------------------------------------
-name        : ~BMText
+name        : ~TurboText
 description : destructor
 parameters  : 
 return      : 
 exceptions  : 
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-BMText::~BMText(){
+TurboText::~TurboText(){
 
 }
 
 
-void BMText::initFont(){
+void TurboText::initFont(){
   unsigned char font_data[1280] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -163,7 +163,7 @@ void BMText::initFont(){
 }
 
 
-void BMText::print(Uint32 x, Uint32 y, const std::string& text){
+void TurboText::print(Uint32 x, Uint32 y, const std::string& text){
   // for( std::string::const_iterator p; p!=text.end(); ++p){
   for(int t=0; t<text.size(); t++){
     unsigned int cp = (unsigned int)text[t];
@@ -183,9 +183,7 @@ void BMText::print(Uint32 x, Uint32 y, const std::string& text){
 }
 
 
-// c:=round(2*cos((x+i+offset)/8));
-
-void BMText::print_wavy(Uint32 x, Uint32 y, const std::string& text){
+void TurboText::print_wavy(Uint32 x, Uint32 y, const std::string& text){
   static int offset=0;
   offset=(offset+2) % 64;
 
@@ -210,15 +208,16 @@ void BMText::print_wavy(Uint32 x, Uint32 y, const std::string& text){
 }
 
 
-void BMText::print_flashy(Uint32 x, Uint32 y, const std::string& text){
+void TurboText::print_flashy(Uint32 x, Uint32 y, const std::string& text){
   static int offset=0;
   offset=(offset+1) % 256;
+  //TODO use palette tables and print out colourful text here
   //std::cout<<"TODO: print_flashy("<<x<<","<<y<<" : " << offset <<") t="<<text<<std::endl;
 }
 
 
 /*
-TODO:
+TODO: color changing letters:
 
 procedure Inittables;
 var i:byte;

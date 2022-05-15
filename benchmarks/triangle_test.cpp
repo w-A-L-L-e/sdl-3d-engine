@@ -17,7 +17,7 @@ description   : Triangles made by just plotting pixels. Optimized horizontal
 #include <numeric>
 #include <vector>
 
-#include "bmtext.h"
+#include "turbotext.h"
 #include "screen.h"
 #include "turtlecube.h"
 
@@ -39,7 +39,7 @@ description   : Triangles made by just plotting pixels. Optimized horizontal
 
 int main(int argc, char **argv) {
   Screen screen(640, 400);
-  BMText out(screen);
+  TurboText out(screen);
 
   int xcoords[1000];
   for (int i = 0; i < 1000; i++)

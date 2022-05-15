@@ -1,30 +1,26 @@
 /*=============================================================================
 author        : Walter Schreppers
-filename      : bmtext.h
+filename      : turbotext.h
 created       : 2/5/2022 at 23:42:16
 modified      : 
 version       : 
 copyright     : Walter Schreppers
-description   : BitmapText to render strings on graphics screen 
+description   : Turbo Pascal bitmap font re-surrected from the 90's
 =============================================================================*/
 
-#ifndef BMTEXT_H
-#define BMTEXT_H
+#ifndef TURBOTEXT_H
+#define TURBOTEXT_H
 
 #include <string>
 #include "screen.h"
 
-//typedef struct {
-//  unsigned char letters[2][5][8];
-//} BMFont;
-
-class BMText {
+class TurboText {
 
   public:
     //constructor & destructor
     //==========================
-    BMText(Screen& s);
-    ~BMText();
+    TurboText(Screen& s);
+    ~TurboText();
 
     //public members
     //==============
@@ -45,7 +41,7 @@ class BMText {
     unsigned char font_matrix[256][5];
     float text_sintab[256];
 
-}; //end of class BMText
+}; //end of class TurboText
 
 #endif
 

@@ -46,6 +46,7 @@ class Screen {
 
     bool opened(){ return running; }
     bool closed(){ return !running; }
+    void quit(){running=false;}
 
     //public locals
     //=============
@@ -57,7 +58,6 @@ class Screen {
     //===============
     void init();
     int abs(int);
-    void _troj_line(int *pl,int *pr,int x0,int y0,int x1,int y1);
 
     //private locals
     //==============

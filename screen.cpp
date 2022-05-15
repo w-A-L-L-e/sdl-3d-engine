@@ -82,6 +82,7 @@ Screen::~Screen() {
 }
 
 void Screen::setFullscreen(bool fs){
+  this->fullscreen = fs;
   if (fs) {
     SDL_SetWindowFullscreen(window,
                             // SDL_WINDOW_FULLSCREEN);
@@ -100,8 +101,7 @@ void Screen::handle_events() {
       break;
     case SDL_KEYDOWN: // SDL_KEYUP also exists
       if (event.key.keysym.scancode == SDL_SCANCODE_F) {
-        fullscreen = !fullscreen;
-        setFullscreen(fullscreen); 
+        setFullscreen(!this->fullscreen); 
       }
       if (event.key.keysym.scancode == SDL_SCANCODE_Q) {
         running = SDL_FALSE;
@@ -140,6 +140,7 @@ void Screen::showRenderInfo() {
 
 void Screen::clear() {
   // clear screen
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(renderer);
 

@@ -16,13 +16,14 @@ this SDL/c++ version as a hobby/preservation of old code ;).
 #include <numeric>
 #include <vector>
 
-#include "bmtext.h"
+#include "fonts/turbotext.h"
 #include "cube.h"
 #include "screen.h"
 #include "torus.h"
 #include "turtlecube.h"
 #include "wallelogo.h"
 #include "wineglass.h"
+#include "menu.h"
 
 void showAbout() {
   std::cout << "                     <<<  Tiny 3D engine >>> " << std::endl;
@@ -49,18 +50,19 @@ void showAbout() {
 int main(int argc, char **argv) {
   showAbout();
 
-  Screen screen(640, 400, "Tiny 3D Engine");
-  BMText out(screen);
+  Screen screen(640, 400, "Tiny 3D Engine", true);
+  TurboText out(screen);
+  WalleLogo logo(screen);
   TurtleCube turtle_cube(screen);
   Cube cube(screen);
-  Torus donut(screen);
   WineGlass beker(screen);
-  WalleLogo logo(screen);
+  Torus torus(screen);
+  Menu menu(screen);
 
   float ax = 0, ay = 0, az = 0;
   while (screen.opened()) {
     // screen.printFPS();
-    screen.handle_events();
+    menu.handle_events();
     screen.clear();
 
     // ax = 0.52;
@@ -75,11 +77,9 @@ int main(int argc, char **argv) {
     // cube.draw(1); //1 is filled triangles
     // out.print(10,10, "Cube");
 
-    donut.rotate(ax, ay, az);
-    donut.draw(1);
-    // donut.draw_rotated_points();
-    screen.setColor(90, 170, 255);
-    out.print(10, 10, "Torus");
+    torus.rotate(ax, ay, az);
+    torus.draw(1);
+    // torus.draw_rotated_points();
 
     // beker.rotate(ax,ay,az);
     // beker.draw(1);
@@ -88,10 +88,9 @@ int main(int argc, char **argv) {
     // logo.rotate(ax,ay,az);
     // logo.draw_edges();
 
-    screen.setColor(90, 170, 255);
-    out.print_wavy(screen.width - 200, screen.height - 20, "Programmed by Walter Schreppers");
     // SDL_Delay(200);
 
+    menu.draw();
     screen.draw();
   }
 
