@@ -25,7 +25,7 @@ class Screen {
     //public members
     //==============
     void handle_events();
-    void clear();
+    void clear(Uint32 r=0, Uint32 g=0, Uint32 b=0, Uint32 alpha=SDL_ALPHA_OPAQUE);
     void setFullscreen(bool fs);
     void draw(bool present=true);
     SDL_Renderer* getRenderer(){ return renderer; }
@@ -52,6 +52,7 @@ class Screen {
     //=============
     SDL_Event event;
     Uint32 width, height, center_x, center_y;
+    double x_scale, y_scale; //scale factors to use when stretched on fullscreen mode
 
   private:
     //private members

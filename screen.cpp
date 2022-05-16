@@ -23,9 +23,9 @@ algorithm   : trivial
 void Screen::init() {
   SDL_Init(SDL_INIT_EVERYTHING);
 
-  window =
-      SDL_CreateWindow(this->window_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                       width, height, SDL_WINDOW_SHOWN);
+  window = SDL_CreateWindow(this->window_title.c_str(), SDL_WINDOWPOS_UNDEFINED,
+                            SDL_WINDOWPOS_UNDEFINED, width, height,
+                            SDL_WINDOW_SHOWN);
 
   // the VSYNC makes it cap at 60fps (or whatever the screen refresh is) and
   // have smooth animation
@@ -48,7 +48,8 @@ return      :
 exceptions  :
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-Screen::Screen(Uint32 width, Uint32 height, const std::string& title, bool full_screen) {
+Screen::Screen(Uint32 width, Uint32 height, const std::string &title,
+               bool full_screen) {
   this->width = width;
   this->height = height;
   this->center_x = width / 2;
@@ -81,7 +82,7 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
-void Screen::setFullscreen(bool fs){
+void Screen::setFullscreen(bool fs) {
   this->fullscreen = fs;
   if (fs) {
     SDL_SetWindowFullscreen(window,
@@ -90,6 +91,12 @@ void Screen::setFullscreen(bool fs){
   } else {
     SDL_SetWindowFullscreen(window, 0);
   }
+
+  // keep track of scaling factors when stretched on full screen mode.
+  int screen_w, screen_h;
+  SDL_GL_GetDrawableSize(window, &screen_w, &screen_h);
+  this->x_scale = (double)screen_w / (double)this->width;
+  this->y_scale = (double)screen_h / (double)this->height;
 }
 
 void Screen::handle_events() {
@@ -101,7 +108,7 @@ void Screen::handle_events() {
       break;
     case SDL_KEYDOWN: // SDL_KEYUP also exists
       if (event.key.keysym.scancode == SDL_SCANCODE_F) {
-        setFullscreen(!this->fullscreen); 
+        setFullscreen(!this->fullscreen);
       }
       if (event.key.keysym.scancode == SDL_SCANCODE_Q) {
         running = SDL_FALSE;
@@ -138,15 +145,24 @@ void Screen::showRenderInfo() {
   }
 }
 
-void Screen::clear() {
-  // clear screen
-  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+void Screen::clear(Uint32 r, Uint32 g, Uint32 b, Uint32 alpha) {
+  // clear screen, is automatically done wiht locking texture
+  SDL_SetRenderDrawColor(renderer, r, g, b, alpha); // 0 = transparent, 255=opaque
   SDL_RenderClear(renderer);
 
   // lock double buffer texture so we can manipulate lockedPixels directly
   int pitch = 0;
   SDL_LockTexture(texture, NULL, reinterpret_cast<void **>(&pixels), &pitch);
+
+  // as optimization, normally all is zeroed and thus already ready for next frame
+  if(r!=0 || g!=0 || b!=0 || alpha!=255){
+    for(int offset=0;offset<(width*height*4)-4;offset+=4){
+      pixels[offset + 0] = b;
+      pixels[offset + 1] = g;
+      pixels[offset + 2] = r;
+      pixels[offset + 3] = alpha;
+    }
+  } 
   // we avoid this here ;)
   // std::memcpy( lockedPixels, pixels.data(), pixels.size() );
 }
@@ -277,65 +293,76 @@ void Screen::triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
   line(x2, y2, x0, y0);
 }
 
-
-// Inspiration https://github.com/ssloy/tinyrenderer/wiki/Lesson-2:-Triangle-rasterization-and-back-face-culling
+// Inspiration
+// https://github.com/ssloy/tinyrenderer/wiki/Lesson-2:-Triangle-rasterization-and-back-face-culling
 void Screen::fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
 
-    if (y0==y1 && y0==y2) return; // skip one line triangles
+  if (y0 == y1 && y0 == y2)
+    return; // skip one line triangles
 
-    // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!) 
-    if (y0>y1){ std::swap(y0, y1); std::swap(x0, x1); }
-    if (y0>y2){ std::swap(y0, y2); std::swap(x0, x2); }
-    if (y1>y2){ std::swap(y1, y2); std::swap(x1, x2); }
+  // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!)
+  if (y0 > y1) {
+    std::swap(y0, y1);
+    std::swap(x0, x1);
+  }
+  if (y0 > y2) {
+    std::swap(y0, y2);
+    std::swap(x0, x2);
+  }
+  if (y1 > y2) {
+    std::swap(y1, y2);
+    std::swap(x1, x2);
+  }
 
-    int total_height = y2-y0; 
+  int total_height = y2 - y0;
 
-    for (int i=0; i<total_height; i++) { 
-        bool second_half = i > y1-y0 || y1==y0; 
-        int segment_height = second_half ? y2-y1 : y1-y0; 
+  for (int i = 0; i < total_height; i++) {
+    bool second_half = i > y1 - y0 || y1 == y0;
+    int segment_height = second_half ? y2 - y1 : y1 - y0;
 
-        float ma = (float)i/total_height; 
-        // be careful: with above conditions no division by zero here 
-        float mb  = (float)(i-(second_half ? y1-y0 : 0))/segment_height; 
+    float ma = (float)i / total_height;
+    // be careful: with above conditions no division by zero here
+    float mb = (float)(i - (second_half ? y1 - y0 : 0)) / segment_height;
 
-        int Ax, Ay, Bx, By;
-        Ax = x0 + (x2-x0)*ma;
-        //Ay = y0 + (y2-y0)*ma;
+    int Ax, Ay, Bx, By;
+    Ax = x0 + (x2 - x0) * ma;
+    // Ay = y0 + (y2-y0)*ma;
 
-        if(second_half){
-          Bx = x1 + (x2-x1)*mb;
-          //By = y1 + (y2-y1)*mb;
-        }
-        else{
-          Bx = x0 + (x1-x0)*mb;
-          //By = y0 + (y1-y0)*mb;
-        }
+    if (second_half) {
+      Bx = x1 + (x2 - x1) * mb;
+      // By = y1 + (y2-y1)*mb;
+    } else {
+      Bx = x0 + (x1 - x0) * mb;
+      // By = y0 + (y1-y0)*mb;
+    }
 
-        if (Ax>Bx){
-          std::swap(Ax, Bx); 
-        }
+    if (Ax > Bx) {
+      std::swap(Ax, Bx);
+    }
 
-        if((y0+i) >= height) continue;
-        if((y0+i) < 0) continue;
+    if ((y0 + i) >= height)
+      continue;
+    if ((y0 + i) < 0)
+      continue;
 
-        // This is simpler but slower:
-        //for (int j=Ax; j<=Bx; j++) { 
-        //  pixel(j, y0+i);
-        //}
-        // Instead: fast draw the horizonal lines without using pixel
-        // and only compute offset once
-        const unsigned int offset = (width * 4 * (y0+i)) + Ax * 4;
-        for(int j=0; j<(Bx-Ax); j++){
-          if((j+Ax) >= width) break;
-          if((j+Ax) < 0 ) continue;
-          int xpos = offset + j*4;
+    // This is simpler but slower:
+    // for (int j=Ax; j<=Bx; j++) {
+    //  pixel(j, y0+i);
+    //}
+    // Instead: fast draw the horizonal lines without using pixel
+    // and only compute offset once
+    const unsigned int offset = (width * 4 * (y0 + i)) + Ax * 4;
+    for (int j = 0; j < (Bx - Ax); j++) {
+      if ((j + Ax) >= width)
+        break;
+      if ((j + Ax) < 0)
+        continue;
+      int xpos = offset + j * 4;
 
-          pixels[xpos + 0] = blue;  // b
-          pixels[xpos + 1] = green; // g
-          pixels[xpos + 2] = red;   // r
-          pixels[xpos + 3] = alpha; // a
-        }
-    } 
+      pixels[xpos + 0] = blue;  // b
+      pixels[xpos + 1] = green; // g
+      pixels[xpos + 2] = red;   // r
+      pixels[xpos + 3] = alpha; // a
+    }
+  }
 }
-
-

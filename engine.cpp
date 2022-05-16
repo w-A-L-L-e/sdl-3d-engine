@@ -16,14 +16,14 @@ this SDL/c++ version as a hobby/preservation of old code ;).
 #include <numeric>
 #include <vector>
 
-#include "fonts/turbotext.h"
-#include "cube.h"
+#include "turbotext.h"
+#include "menu.h"
 #include "screen.h"
+#include "cube.h"
 #include "torus.h"
 #include "turtlecube.h"
 #include "wallelogo.h"
 #include "wineglass.h"
-#include "menu.h"
 
 void showAbout() {
   std::cout << "                     <<<  Tiny 3D engine >>> " << std::endl;
@@ -47,51 +47,66 @@ void showAbout() {
   std::cout << std::endl;
 }
 
+
+//work in progress, menu is not fully functional, and some ugly code that needs refactoring in this main...
 int main(int argc, char **argv) {
   showAbout();
 
   Screen screen(640, 400, "Tiny 3D Engine", true);
   TurboText out(screen);
+  
   WalleLogo logo(screen);
-  TurtleCube turtle_cube(screen);
   Cube cube(screen);
-  WineGlass beker(screen);
   Torus torus(screen);
-  Menu menu(screen);
+  WineGlass beker(screen);
+  TurtleCube turtle_cube(screen);
 
+  std::vector<Object*> objects;
+  objects.push_back(&logo);
+  objects.push_back(&cube);
+  objects.push_back(&torus);
+  objects.push_back(&beker);
+  objects.push_back(&turtle_cube);
+
+  Menu menu(screen, objects.size());
   float ax = 0, ay = 0, az = 0;
+  int object_pos = 0;
+  int next_screen_timeout = 60*5; //fps*seconds (this is to be re-done with timing instead...)
+
   while (screen.opened()) {
     // screen.printFPS();
     menu.handle_events();
     screen.clear();
 
-    // ax = 0.52;
+    if(next_screen_timeout-- == 0){
+      next_screen_timeout = 60*5; //yes ugly, needs fixing here...
+      object_pos = (object_pos+1) % objects.size();
+
+      if(object_pos == 0) menu.appear();
+      if(object_pos == 1) menu.hide(); 
+    }
+
+    //TODO: get current object and rotation speed and draw mode from menu
     ax += 0.03;
     ay += 0.02;
     az += 0.01;
 
-    // turtle_cube.rotate(ax, ay, -az);
-    // turtle_cube.draw_edges(true);
+    Object* current_object = objects[object_pos];
+    current_object->rotate(ax, ay, az);
 
-    // cube.rotate(ax,ay,az);
-    // cube.draw(1); //1 is filled triangles
-    // out.print(10,10, "Cube");
+    //TODO: allow menu to steer this...
+    if(object_pos == 0) current_object->draw_edges(true); // edges with shading 
+    if(object_pos == 1) current_object->draw(0); // filled triangles; 
+    if(object_pos == 2) current_object->draw(1); // filled triangles;
+    if(object_pos == 3) current_object->draw(0); // unfilled triangles;
+    if(object_pos == 4) current_object->draw_edges(true); 
 
-    torus.rotate(ax, ay, az);
-    torus.draw(1);
-    // torus.draw_rotated_points();
+    screen.draw(false); // don't present just yet
+    menu.draw();        // overlay menu on top of screen surface
 
-    // beker.rotate(ax,ay,az);
-    // beker.draw(1);
-    // out.print(10,10, "Wine Glass ");
-
-    // logo.rotate(ax,ay,az);
-    // logo.draw_edges();
-
-    // SDL_Delay(200);
-
-    menu.draw();
-    screen.draw();
+    // now present on screen
+    SDL_RenderPresent(screen.getRenderer());
+    // SDL_Delay(200); // delay is not needed, renderpresent waits for 60fps
   }
 
   return 0;

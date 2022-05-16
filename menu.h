@@ -19,7 +19,7 @@ class Menu {
   public:
     //constructor & destructor
     //==========================
-    Menu(Screen& screen);
+    Menu(Screen& screen, int object_count);
     ~Menu();
 
     //public members
@@ -38,7 +38,7 @@ class Menu {
     //private locals:
     //===============
     Screen* screen;
-    int yOffset, menu_width, menu_height;
+    int yOffset, menu_width, menu_height, object_count;
 
     bool bAppearing, bHiding, bFullscreen, bShow;
     SDL_Event event;
