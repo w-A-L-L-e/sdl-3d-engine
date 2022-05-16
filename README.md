@@ -8,8 +8,13 @@ This all rotates real time at 60FPS on my 2014 macbook with less than 10% cpu us
 The torus has over 1000 triangles. Ofcourse it peanuts to what you can do when using OpenGL or Volkan. Still
 it's already way better than what was possible on my pentium in the 90's in turbo pascal ;).
 
+Title screen that also shows a menu with alpha blending:
 ![Menu screen](screens/3dlogo.png?raw=true "Simple logo drawn in 3d")
+
+Torus generated as rotation object and rendered with shading (+1000 triangles here).
 ![Torus](screens/torus.png?raw=true "Torus with backface culling and shading with normals")
+
+Glass generated as rotation object and rendered using triangle lines
 ![Glass](screens/rotation_generated_glass.png?raw=true "Glass generated as rotation object, rendered with hollow triangles")
 
 # TODOS / Work in progress
@@ -18,6 +23,9 @@ I wrote in the pascal version. However I might skip that last step in favour of 
 This could be a nice starting point however to run on old hardware that doesn't have a gpu or some embedded project.
 We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
 rewriting the screen class.
+
+Ah yes and most likely a lightweight STL file loader will be added to show way more cool objects than I could generate here ;).
+
 
 For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
 is the least amount of code to get a 3d cube animated on screen.
