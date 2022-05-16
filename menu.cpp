@@ -37,6 +37,7 @@ Menu::Menu(Screen &scr, int object_count) {
   menufont = new TurboText(*screen);
   this->object_count = object_count;
   appear();
+  this->bFullscreen = true; //TODO: make a getter on screen and set correct initial val
 }
 
 /*-----------------------------------------------------------------------------
@@ -108,12 +109,16 @@ void Menu::draw() {
   box(20, yOffset, menu_width, menu_height);
 
   screen->setColor(250, 250, 255);
+  
   menufont->print(30, yOffset + 15, "M      : Toggle menu");
   menufont->print(30, yOffset + 30, "Up     : increase X rotation");
   menufont->print(30, yOffset + 40, "Down   : decrease X rotation");
   menufont->print(30, yOffset + 60, "Left   : decrease Y rotation");
   menufont->print(30, yOffset + 70, "Right  : increase Y rotation");
   menufont->print(30, yOffset + 85, "Space  : Next object");
+
+  menufont->print(450, yOffset + 15, "F  : Toggle Fullscreen mode");
+
   menufont->print_wavy(screen->center_x - 50, yOffset + 10, "Tiny 3d Engine");
   menufont->print(screen->width - 180, yOffset + 85,
                   "Author: Walter Schreppers");

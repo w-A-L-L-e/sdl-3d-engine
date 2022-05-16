@@ -53,6 +53,8 @@ int main(int argc, char **argv) {
   showAbout();
 
   Screen screen(640, 400, "Tiny 3D Engine", true);
+  SDL_ShowCursor(SDL_DISABLE);
+
   TurboText out(screen);
   
   WalleLogo logo(screen);
@@ -71,7 +73,8 @@ int main(int argc, char **argv) {
   Menu menu(screen, objects.size());
   float ax = 0, ay = 0, az = 0;
   int object_pos = 0;
-  int next_screen_timeout = 60*5; //fps*seconds (this is to be re-done with timing instead...)
+  int timeout_seconds = 7;
+  int next_screen_timeout = 60*timeout_seconds; //fps*seconds (this is to be re-done with timing instead...)
 
   while (screen.opened()) {
     // screen.printFPS();
@@ -79,7 +82,7 @@ int main(int argc, char **argv) {
     screen.clear();
 
     if(next_screen_timeout-- == 0){
-      next_screen_timeout = 60*5; //yes ugly, needs fixing here...
+      next_screen_timeout = 60*timeout_seconds; //yes ugly, needs fixing here...
       object_pos = (object_pos+1) % objects.size();
 
       if(object_pos == 0) menu.appear();
@@ -96,7 +99,7 @@ int main(int argc, char **argv) {
 
     //TODO: allow menu to steer this...
     if(object_pos == 0) current_object->draw_edges(true); // edges with shading 
-    if(object_pos == 1) current_object->draw(0); // filled triangles; 
+    if(object_pos == 1) current_object->draw(1); // filled triangles; 
     if(object_pos == 2) current_object->draw(1); // filled triangles;
     if(object_pos == 3) current_object->draw(0); // unfilled triangles;
     if(object_pos == 4) current_object->draw_edges(true); 

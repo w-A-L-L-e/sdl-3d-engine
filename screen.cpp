@@ -48,8 +48,7 @@ return      :
 exceptions  :
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
-Screen::Screen(Uint32 width, Uint32 height, const std::string &title,
-               bool full_screen) {
+Screen::Screen(Uint32 width, Uint32 height, const std::string &title, bool full_screen) {
   this->width = width;
   this->height = height;
   this->center_x = width / 2;
@@ -108,7 +107,8 @@ void Screen::handle_events() {
       break;
     case SDL_KEYDOWN: // SDL_KEYUP also exists
       if (event.key.keysym.scancode == SDL_SCANCODE_F) {
-        setFullscreen(!this->fullscreen);
+        this->fullscreen = !this->fullscreen;
+        setFullscreen(this->fullscreen);
       }
       if (event.key.keysym.scancode == SDL_SCANCODE_Q) {
         running = SDL_FALSE;
