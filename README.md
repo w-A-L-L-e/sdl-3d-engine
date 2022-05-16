@@ -1,5 +1,28 @@
-# sdl-3d-engine
-Port to c++ from my old turbo pascal 3d engine
+# Tiny 3D Engine
+Port to c++ from my old turbo pascal 3d engine using sdl and drawing raw pixels without any GPU or frameworks.
+Will most likely make another port with actual vulkan or opengl someday. For now I wanted my old engine to run
+again on my macbook pure out of nostalgia ;).
+
+# Some screenshots of what is already working
+This all rotates real time at 60FPS on my 2014 macbook with less than 10% cpu usage so not bad at all.
+The torus has over 1000 triangles. Ofcourse it peanuts to what you can do when using OpenGL or Volkan. Still
+it's already way better than what was possible on my pentium in the 90's in turbo pascal ;).
+
+![Menu screen](screens/3dlogo.png?raw=true "Simple logo drawn in 3d")
+![Torus](screens/torus.png?raw=true "Torus with backface culling and shading with normals")
+![Glass](screens/rotation_generated_glass.png?raw=true "Glass generated as rotation object, rendered with hollow triangles")
+
+# TODOS / Work in progress
+Menu system is not fully operational and I also want to add some more shading like gauraud and even maybe texture mapping like
+I wrote in the pascal version. However I might skip that last step in favour of using OpenGL / hardware acceleration instead.
+This could be a nice starting point however to run on old hardware that doesn't have a gpu or some embedded project.
+We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
+rewriting the screen class.
+
+For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
+is the least amount of code to get a 3d cube animated on screen.
+
+Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. 
 
 # Installation
 
