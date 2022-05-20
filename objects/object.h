@@ -11,6 +11,7 @@ bugreport(log):
 #ifndef TDOBJECT_H
 #define TDOBJECT_H
 #include <vector>
+#include <string>
 #include "screen.h"
 
 struct point{
@@ -57,6 +58,7 @@ class Object {
     void draw_rotated_points();
     void draw_edges(bool shading=true);
     void draw(int shade_technique=0);
+    virtual std::string name(){return "Object";}
 
   private:
     //private members:

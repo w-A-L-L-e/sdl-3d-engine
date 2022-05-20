@@ -23,6 +23,7 @@ class WalleLogo : public Object {
 
     //public members
     //==============
+    std::string name(){return "Walle logo";}
 
   private:
     //private members:

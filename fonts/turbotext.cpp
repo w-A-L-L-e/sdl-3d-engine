@@ -185,7 +185,7 @@ void TurboText::print(Uint32 x, Uint32 y, const std::string& text){
 
 void TurboText::print_wavy(Uint32 x, Uint32 y, const std::string& text){
   static int offset=0;
-  offset=(offset+2) % 64;
+  offset=(offset+1) % 64;
 
   for(int t=0; t<text.size(); t++){
     unsigned int cp = (unsigned int)text[t];

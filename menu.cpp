@@ -36,8 +36,14 @@ Menu::Menu(Screen &scr, int object_count) {
   yOffset = screen->height;
   menufont = new TurboText(*screen);
   this->object_count = object_count;
-  appear();
-  this->bFullscreen = true; //TODO: make a getter on screen and set correct initial val
+  this->bFullscreen = true;
+  this->keypressed = false;
+  current_object = 0;
+  render_mode = 2; // 0 is filled triangles, 2=shaded edges
+  x_speed = 0.02;
+  y_speed = 0.03;
+  z_speed = 0.01;
+  appear(); // show menu on startup
 }
 
 /*-----------------------------------------------------------------------------
@@ -110,50 +116,68 @@ void Menu::draw() {
 
   screen->setColor(250, 250, 255);
   
-  menufont->print(30, yOffset + 15, "M      : Toggle menu");
-  menufont->print(30, yOffset + 30, "Up     : increase X rotation");
-  menufont->print(30, yOffset + 40, "Down   : decrease X rotation");
-  menufont->print(30, yOffset + 60, "Left   : decrease Y rotation");
-  menufont->print(30, yOffset + 70, "Right  : increase Y rotation");
-  menufont->print(30, yOffset + 85, "Space  : Next object");
+  menufont->print(30, yOffset + 15, "M     : Toggle menu");
+  menufont->print(30, yOffset + 30, "W, S  : X rotation inc, dec");
+  menufont->print(30, yOffset + 45, "A, D  : Y rotation inc, dec");
+  menufont->print(30, yOffset + 60, "N, M  : Z rotation inc, dec");
+  menufont->print(30, yOffset + 75, "ENTER : stop rotation");
 
-  menufont->print(450, yOffset + 15, "F  : Toggle Fullscreen mode");
+  menufont->print(400, yOffset + 15,  "F      : Toggle Fullscreen mode");
+  menufont->print(400, yOffset + 30,  "ARROWS : Walk in direction of arrow");
+  menufont->print(400, yOffset + 45,  "R      : Change render mode");
+  menufont->print(400, yOffset + 60,  "P      : Previous object");
+  menufont->print(400, yOffset + 75,  "SPACE  : Next object");
 
   menufont->print_wavy(screen->center_x - 50, yOffset + 10, "Tiny 3d Engine");
-  menufont->print(screen->width - 180, yOffset + 85,
-                  "Author: Walter Schreppers");
+  menufont->print(screen->center_x - 100, yOffset + 85, "Author: Walter Schreppers");
 }
 
 void Menu::handle_events() {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-    case SDL_QUIT:
-      screen->quit();
-      break;
-    case SDL_KEYDOWN: // SDL_KEYUP also exists
-      if (event.key.keysym.scancode == SDL_SCANCODE_F) {
-        bFullscreen = !bFullscreen;
-        screen->setFullscreen(bFullscreen);
-      }
-      if (event.key.keysym.scancode == SDL_SCANCODE_Q) {
+      case SDL_QUIT:
         screen->quit();
-      }
+        break;
+      case SDL_KEYDOWN: // SDL_KEYUP also exists
+        this->keypressed=true;
+        switch(event.key.keysym.scancode){
+          case SDL_SCANCODE_F: 
+            bFullscreen = !bFullscreen;
+            screen->setFullscreen(bFullscreen);
+            break;
+          case SDL_SCANCODE_M:
+            if (bShow) {
+              hide();
+            } else {
+              if (bAppearing) {
+                hide();
+              } else {
+                appear();
+              }
+            }
+            break;
 
-      if (event.key.keysym.scancode == SDL_SCANCODE_M) {
-        if (bShow) {
-          hide();
-        } else {
-          if (bAppearing) {
-            hide();
-          } else {
-            appear();
-          }
+          case SDL_SCANCODE_Q: screen->quit(); break;
+          case SDL_SCANCODE_W: x_speed+=0.01; break;
+          case SDL_SCANCODE_S: x_speed-=0.01; break;
+          case SDL_SCANCODE_A: y_speed-=0.01; break;
+          case SDL_SCANCODE_D: y_speed+=0.01; break;
+          case SDL_SCANCODE_Z: z_speed-=0.01; break;
+          case SDL_SCANCODE_X: z_speed+=0.01; break;
+          case SDL_SCANCODE_RETURN: x_speed=y_speed=z_speed=0.0;   break;
+          case SDL_SCANCODE_R: render_mode = (render_mode+1) % 4; break;
+          case SDL_SCANCODE_P: 
+            current_object--;
+            if(current_object < 0) current_object = object_count;
+            break;
+          case SDL_SCANCODE_SPACE:
+            current_object++;
+            if(current_object >= object_count) current_object = 0;
+            break;
+          default: break;
         }
-      }
-
-      break;
-    default:
-      break;
+        break;
+      default: break;
     }
   }
 }

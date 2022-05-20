@@ -23,6 +23,7 @@ class TurtleCube: public Object {
 
     //public members
     //==============
+    std::string name(){return "Turtle cube";}
 
   private:
     //private members:

@@ -30,6 +30,16 @@ class Menu {
     void hide();
     void handle_events();
 
+
+    //public locals
+    //=============
+    float x_speed, y_speed, z_speed;
+    int current_object;
+    int current_viewmode;
+    int render_mode;
+    bool keypressed;
+
+
   private:
     //private members:
     //================
@@ -39,11 +49,10 @@ class Menu {
     //===============
     Screen* screen;
     int yOffset, menu_width, menu_height, object_count;
-
     bool bAppearing, bHiding, bFullscreen, bShow;
+
     SDL_Event event;
     TurboText* menufont;
-
 }; //end of class Menu
 
 #endif

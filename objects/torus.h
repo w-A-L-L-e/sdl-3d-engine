@@ -23,6 +23,7 @@ class Torus : public Object {
 
     //public members
     //==============
+    std::string name(){return "Torus";}
 
   private:
     //private members:

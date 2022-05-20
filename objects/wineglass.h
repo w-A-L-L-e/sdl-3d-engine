@@ -23,6 +23,7 @@ class WineGlass : public Object {
 
     //public members
     //==============
+    std::string name(){return "Wine Glass";}
 
   private:
     //private members:
