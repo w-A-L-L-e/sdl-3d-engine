@@ -349,14 +349,15 @@ void Screen::fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
     // for (int j=Ax; j<=Bx; j++) {
     //  pixel(j, y0+i);
     //}
+
     // Instead: fast draw the horizonal lines without using pixel
     // and only compute offset once
+    if(Ax<0) Ax=0; // clip at left edge screen;
+                   
     const unsigned int offset = (width * 4 * (y0 + i)) + Ax * 4;
     for (int j = 0; j < (Bx - Ax); j++) {
       if ((j + Ax) >= width)
         break;
-      if ((j + Ax) < 0)
-        continue;
       int xpos = offset + j * 4;
 
       pixels[xpos + 0] = blue;  // b

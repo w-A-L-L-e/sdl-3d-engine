@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   dodecahedron.load("./assets/dodecahedron.obj", 270);
 
   BlenderObject car(screen);
-  car.load("./assets/car.obj",450);
+  car.load("./assets/car.obj",500);
 
   //todo fix loader to support textured faces here
   // BlenderObject plane(screen);
