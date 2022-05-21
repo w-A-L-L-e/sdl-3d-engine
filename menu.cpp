@@ -39,7 +39,7 @@ Menu::Menu(Screen &scr, int object_count) {
   this->bFullscreen = true;
   this->keypressed = false;
   current_object = 0;
-  render_mode = 2; // 0 is filled triangles, 2=shaded edges
+  render_mode = 0; // 0 is filled triangles, 2=shaded edges
   x_speed = 0.02;
   y_speed = 0.03;
   z_speed = 0.01;
@@ -165,7 +165,7 @@ void Menu::handle_events() {
           case SDL_SCANCODE_Z: z_speed-=0.01; break;
           case SDL_SCANCODE_X: z_speed+=0.01; break;
           case SDL_SCANCODE_RETURN: x_speed=y_speed=z_speed=0.0;   break;
-          case SDL_SCANCODE_R: render_mode = (render_mode+1) % 4; break;
+          case SDL_SCANCODE_R: render_mode = (render_mode+1) % 5; break;
           case SDL_SCANCODE_P: 
             current_object--;
             if(current_object < 0) current_object = object_count-1;

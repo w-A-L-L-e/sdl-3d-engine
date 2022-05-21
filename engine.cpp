@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   BlenderObject car(screen);
   car.load("./assets/car.obj",500);
 
-  //todo fix loader to support textured faces here
+  // TODOL: extend blender loader to support textured faces here
   // BlenderObject plane(screen);
   // plane.load("./assets/plane.obj");
 
@@ -82,8 +82,9 @@ int main(int argc, char **argv) {
   float ax = 0, ay = 0, az = 0;
   int object_pos = 0;
   int timeout_seconds = 7;
-  int next_screen_timeout = 60*timeout_seconds; //fps*seconds (this is to be re-done with timing instead...)
-  menu.render_mode = 0;
+
+  //fps*seconds (this is to be re-done with timing instead...)
+  int next_screen_timeout = 60*timeout_seconds;
 
   while (screen.opened()) {
     // screen.printFPS();
@@ -113,6 +114,8 @@ int main(int argc, char **argv) {
       case 1: current_object->draw(0); break;
       case 2: current_object->draw_edges(true); break;
       case 3: current_object->draw_edges(false); break;
+      case 4: current_object->draw_rotated_points(); break;
+      //case 5: current_object->draw_points(); break; -> need to recenter these 
       default: current_object->draw(1); break; // 0  draw filled shaded triangles
     }
 
