@@ -53,10 +53,10 @@ int main(int argc, char **argv) {
   TurboText ttext(screen);
 
   BlenderObject dodecahedron(screen);
-  dodecahedron.load("./assets/dodecahedron.obj");
+  dodecahedron.load("./assets/dodecahedron.obj", 270);
 
   BlenderObject car(screen);
-  car.load("./assets/car.obj");
+  car.load("./assets/car.obj",450);
 
   //todo fix loader to support textured faces here
   // BlenderObject plane(screen);

@@ -63,7 +63,7 @@ exceptions  :
 algorithm   : compute bounding box and then translate + scale object so it
 displays nicely 
 -----------------------------------------------------------------------------*/
-void BlenderObject::normalize_object(){
+void BlenderObject::normalize_object(float resize){
 
   //bounding box
   float max_x=0, max_y=0, max_z=0;
@@ -87,7 +87,7 @@ void BlenderObject::normalize_object(){
   if(delta_y > max_dim) max_dim = delta_y;
   if(delta_z > max_dim) max_dim = delta_z;
 
-  float scale = 250/max_dim;
+  float scale = resize/max_dim;
 
 
   for(int i=0; i<points.size(); i++){
@@ -115,7 +115,7 @@ algorithm   :
    v x y z (vertex x,y,z)
    f v1//vn1 v2//vn2 v3//vn3  --> triangle v1, v2, v3 and then // then the normal
 -----------------------------------------------------------------------------*/
-void BlenderObject::load(const std::string& filename){
+void BlenderObject::load(const std::string& filename, float resize){
   this->file_name = filename;
   this->object_name = filename; //in case obj file does not have an o line
   points.clear();
@@ -159,7 +159,7 @@ void BlenderObject::load(const std::string& filename){
     // else cout << "skipping line=" << line <<endl;
   }
 
-  normalize_object();
+  normalize_object(resize);
 }
 
 void BlenderObject::save(const std::string& filename){

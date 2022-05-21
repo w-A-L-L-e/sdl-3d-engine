@@ -24,7 +24,7 @@ class BlenderObject : public Object {
     //public members
     //==============
     std::string name(){return object_name;}
-    void load(const std::string& filename);
+    void load(const std::string& filename, float resize=300);
     void save(const std::string& filename);
 
 
@@ -38,7 +38,7 @@ class BlenderObject : public Object {
     //private members:
     //================
     void init();
-    void normalize_object();
+    void normalize_object(float resize=300);
 
     //private locals:
     //===============
