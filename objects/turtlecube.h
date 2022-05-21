@@ -25,6 +25,11 @@ class TurtleCube: public Object {
     //==============
     std::string name(){return "Turtle cube";}
 
+    // this object can't use triangle drawing
+    void draw(int filled){
+      draw_edges(filled);
+    }
+
   private:
     //private members:
     //================

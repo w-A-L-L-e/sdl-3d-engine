@@ -1,52 +1,51 @@
 /*=============================================================================
 author        : Walter Schreppers
-filename      : wineglass.h
-created       : 6/5/2022 at 18:21:12
+filename      : blenderobject.h
+created       : 21/5/2022 at 00:41:44
 modified      : 
 version       : 
 copyright     : Walter Schreppers
 bugreport(log): 
 =============================================================================*/
 
-#ifndef WINEGLASS_H
-#define WINEGLASS_H
+#ifndef BLENDEROBJECT_H
+#define BLENDEROBJECT_H
 
 #include "object.h"
 
-class WineGlass : public Object {
+class BlenderObject : public Object {
 
   public:
     //constructor & destructor
     //==========================
-    WineGlass(Screen& scr);
-    ~WineGlass();
+    BlenderObject(Screen&);
+    ~BlenderObject();
 
     //public members
     //==============
-    std::string name(){return "Wine Glass";}
+    std::string name(){return object_name;}
+    void load(const std::string& filename);
+    void save(const std::string& filename);
 
-    // this object can't use edge drawing
+
+    // this object can't use edge drawing yet
     void draw_edges(bool shaded){
-      if(shaded) draw(1);  // triangle outline
+      if(shaded) draw(1);
       else draw(0);
     }
-
 
   private:
     //private members:
     //================
     void init();
-    void put_circle(float radius, float outer_radius, int schil_rotate);
-    void rotate_schil(int rot_amount);
-    void init_points();
-    void init_triangles();
+    void normalize_object();
 
     //private locals:
     //===============
-    int schil_size;
+    std::string file_name;
+    std::string object_name;
 
-
-}; //end of class WineGlass
+}; //end of class BlenderObject
 
 #endif
 

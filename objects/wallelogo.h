@@ -25,6 +25,11 @@ class WalleLogo : public Object {
     //==============
     std::string name(){return "Walle logo";}
 
+    // this object can't use triangle drawing
+    void draw(int filled){
+      draw_edges(filled);
+    }
+
   private:
     //private members:
     //================

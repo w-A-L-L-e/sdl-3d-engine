@@ -25,6 +25,14 @@ class Torus : public Object {
     //==============
     std::string name(){return "Torus";}
 
+    // this object can't use edge drawing
+    void draw_edges(bool shaded){
+      if(shaded) draw(1);
+      else draw(0);
+    }
+
+
+
   private:
     //private members:
     //================

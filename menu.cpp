@@ -168,7 +168,7 @@ void Menu::handle_events() {
           case SDL_SCANCODE_R: render_mode = (render_mode+1) % 4; break;
           case SDL_SCANCODE_P: 
             current_object--;
-            if(current_object < 0) current_object = object_count;
+            if(current_object < 0) current_object = object_count-1;
             break;
           case SDL_SCANCODE_SPACE:
             current_object++;

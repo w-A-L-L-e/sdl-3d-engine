@@ -18,12 +18,14 @@ this SDL/c++ version as a hobby/preservation of old code ;).
 
 #include "menu.h"
 #include "screen.h"
+#include "turbotext.h"
+
+#include "blenderobject.h"
 #include "cube.h"
 #include "torus.h"
 #include "turtlecube.h"
 #include "wallelogo.h"
 #include "wineglass.h"
-#include "turbotext.h"
 
 void showAbout() {
   std::cout << "                     <<<  Tiny 3D engine >>> " << std::endl;
@@ -49,6 +51,17 @@ int main(int argc, char **argv) {
   SDL_ShowCursor(SDL_DISABLE);
  
   TurboText ttext(screen);
+
+  BlenderObject dodecahedron(screen);
+  dodecahedron.load("./assets/dodecahedron.obj");
+
+  BlenderObject car(screen);
+  car.load("./assets/car.obj");
+
+  //todo fix loader to support textured faces here
+  // BlenderObject plane(screen);
+  // plane.load("./assets/plane.obj");
+
   WalleLogo logo(screen);
   Cube cube(screen);
   Torus torus(screen);
@@ -56,10 +69,13 @@ int main(int argc, char **argv) {
   TurtleCube turtle_cube(screen);
 
   std::vector<Object*> objects;
-  objects.push_back(&logo);
+
   objects.push_back(&cube);
+  objects.push_back(&logo);
   objects.push_back(&torus);
   objects.push_back(&beker);
+  objects.push_back(&dodecahedron);
+  objects.push_back(&car);
   objects.push_back(&turtle_cube);
 
   Menu menu(screen, objects.size());
@@ -67,9 +83,10 @@ int main(int argc, char **argv) {
   int object_pos = 0;
   int timeout_seconds = 7;
   int next_screen_timeout = 60*timeout_seconds; //fps*seconds (this is to be re-done with timing instead...)
+  menu.render_mode = 0;
 
   while (screen.opened()) {
-    screen.printFPS();
+    // screen.printFPS();
     menu.handle_events();
     screen.clear();
 
@@ -82,12 +99,6 @@ int main(int argc, char **argv) {
 
         if(object_pos == 0) menu.appear();
         if(object_pos == 1) menu.hide(); 
-
-        if(object_pos == 0) menu.render_mode = 2; // edges with shading 
-        if(object_pos == 1) menu.render_mode = 0; // cube
-        if(object_pos == 2) menu.render_mode = 0; // torus filled triangles
-        if(object_pos == 3) menu.render_mode = 1; // glass unfilled triangles;
-        if(object_pos == 4) menu.render_mode = 2; // turtle cube edges with shading
       }
     }
 

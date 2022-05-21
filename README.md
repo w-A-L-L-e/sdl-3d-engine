@@ -17,15 +17,15 @@ Torus generated as rotation object and rendered with shading (+1000 triangles he
 Glass generated as rotation object and rendered using triangle lines
 ![Glass](screens/rotation_generated_glass.png?raw=true "Glass generated as rotation object, rendered with hollow triangles")
 
+Some free supercar model from the internet, cleaned up and exported with blender
+![Menu screen](screens/car_object_render.png?raw=true "Detailed car object exported with blender")
+
+
 # TODOS / Work in progress
-Menu system is not fully operational and I also want to add some more shading like gauraud and even maybe texture mapping like
-I wrote in the pascal version. However I might skip that last step in favour of using OpenGL / hardware acceleration instead.
-This could be a nice starting point however to run on old hardware that doesn't have a gpu or some embedded project.
+Object file loader needs further work, and most likely add an STL loader as well.
+Then work on camera in world position and making a world of multiple objects etc.
 We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
 rewriting the screen class.
-
-Ah yes and most likely a lightweight STL file loader will be added to show way more cool objects than I could generate here ;).
-
 
 For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
 is the least amount of code to get a 3d cube animated on screen.

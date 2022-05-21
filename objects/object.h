@@ -54,10 +54,10 @@ class Object {
     //public members
     //==============
     void rotate(float x=0, float y=0, float z=0, bool perspective_projection=true);
-    void draw_points();
-    void draw_rotated_points();
-    void draw_edges(bool shading=true);
-    void draw(int shade_technique=0);
+    virtual void draw_points();
+    virtual void draw_rotated_points();
+    virtual void draw_edges(bool shading=true);
+    virtual void draw(int shade_technique=0);
     virtual std::string name(){return "Object";}
 
   private:
