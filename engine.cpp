@@ -47,7 +47,9 @@ void showAbout() {
 int main(int argc, char **argv) {
   showAbout();
 
-  Screen screen(640, 400, "Tiny 3D Engine", true);
+  // Screen screen(1280, 800, "Tiny 3D Engine", true); //still works, at 50% cpu though ;)
+  // Screen screen(320, 200, "Tiny 3D Engine", true); // how it ran in pascal, pfew phat pixels here
+  Screen screen(640, 400, "Tiny 3D Engine", true); // best middleground, low cpu and detailed enough
   SDL_ShowCursor(SDL_DISABLE);
  
   TurboText ttext(screen);
