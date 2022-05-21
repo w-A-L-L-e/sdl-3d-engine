@@ -73,7 +73,7 @@ void WineGlass::rotate_schil(int rot_amount=16){ // 26 is original
 
 void WineGlass::init_points(){
   // give points in clockwize order from bottom to top
-  add_point(-1,0,0);
+  add_point(0,0,0);
   add_point(-50,0,0);
   add_point(-10,10,0);
   add_point(-10,70,0);
@@ -83,7 +83,7 @@ void WineGlass::init_points(){
   add_point(-40,120,0);
   add_point(-40,100,0);
   add_point(-20,80,0);
-  add_point(-1,80,0);
+  add_point(0,80,0);
 
   // now correct center of object in space
   for(unsigned int i=0; i<points.size(); i++){
@@ -91,7 +91,7 @@ void WineGlass::init_points(){
   }
 
   schil_size = points.size();
-  rotate_schil();
+  rotate_schil(8); // 26 original, 16 or 8 is better
 
   //scale bigger a little
   float scale=1.8;
