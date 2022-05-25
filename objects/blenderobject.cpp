@@ -147,14 +147,25 @@ void BlenderObject::load(const std::string& filename, float resize){
     }
     else if(k=="f"){
       int a,b,c;
-      int na, nb, nc;   // normals, we don't use yet
       char s;           // slash
-      iss >> a >> s >> s >> na;
-      iss >> b >> s >> s >> nb;
-      iss >> c >> s >> s >> nc;
-      // cout << "triange a="<< a-1 <<" b=" << b-1 << " c=" << c-1 << endl;
-      // cout << "triange na="<< na-1 <<" nb=" << nb-1 << " nc=" << nc-1 << endl;
-      add_triangle(a-1,c-1, b-1);
+      iss >> a;
+      s=iss.get();
+
+      if( isspace(s) ){ //obj file does not contain normals
+        iss >> b >> c;
+        //cout << "no normals triange a="<< a-1 <<" b=" << b-1 << " c=" << c-1 << endl;
+        add_triangle(a-1,c-1, b-1);
+      }
+      else{
+        int na, nb, nc;   // normals we read but don't use yet
+        iss >> s >> na;
+        iss >> b >> s >> s >> nb;
+        iss >> c >> s >> s >> nc;
+        //cout << "triange a="<< a-1 <<" b=" << b-1 << " c=" << c-1 << endl;
+        //cout << "triange na="<< na-1 <<" nb=" << nb-1 << " nc=" << nc-1 << endl;
+
+        add_triangle(a-1,c-1, b-1);
+      }
     }
     // else cout << "skipping line=" << line <<endl;
   }

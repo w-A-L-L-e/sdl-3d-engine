@@ -43,7 +43,7 @@ void showAbout() {
 }
 
 
-//work in progress, menu is not fully functional, and some ugly code that needs refactoring in this main...
+// This main function has grown a bit large, needs some refactoring soon...
 int main(int argc, char **argv) {
   showAbout();
 
@@ -57,28 +57,31 @@ int main(int argc, char **argv) {
   BlenderObject dodecahedron(screen);
   dodecahedron.load("./assets/dodecahedron.obj", 270);
 
-  BlenderObject car(screen);
-  car.load("./assets/car.obj",500);
-
-  // TODOL: extend blender loader to support textured faces here
-  // BlenderObject plane(screen);
-  // plane.load("./assets/plane.obj");
+  BlenderObject teapot(screen);
+  teapot.load("./assets/teapot.obj",300);
 
   WalleLogo logo(screen);
   Cube cube(screen);
   Torus torus(screen);
   WineGlass beker(screen);
-  TurtleCube turtle_cube(screen);
+  // TurtleCube turtle_cube(screen);
+  BlenderObject cmdObject(screen); //user given commandline object (optional)
 
   std::vector<Object*> objects;
+
+  // load optional user specified object on commandline as first object 
+  if(argc>1){
+    cmdObject.load(argv[1], 300); // todo make scale also a command arg
+    objects.push_back(&cmdObject);
+  }
 
   objects.push_back(&cube);
   objects.push_back(&logo);
   objects.push_back(&torus);
   objects.push_back(&beker);
   objects.push_back(&dodecahedron);
-  objects.push_back(&car);
-  objects.push_back(&turtle_cube);
+  objects.push_back(&teapot);
+  //objects.push_back(&turtle_cube);
 
   Menu menu(screen, objects.size());
   float ax = 0, ay = 0, az = 0;

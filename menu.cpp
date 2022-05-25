@@ -119,7 +119,7 @@ void Menu::draw() {
   menufont->print(30, yOffset + 15, "M     : Toggle menu");
   menufont->print(30, yOffset + 30, "W, S  : X rotation inc, dec");
   menufont->print(30, yOffset + 45, "A, D  : Y rotation inc, dec");
-  menufont->print(30, yOffset + 60, "N, M  : Z rotation inc, dec");
+  menufont->print(30, yOffset + 60, "Z, X  : Z rotation inc, dec");
   menufont->print(30, yOffset + 75, "ENTER : stop rotation");
 
   menufont->print(400, yOffset + 15,  "F      : Toggle Fullscreen mode");
