@@ -21,17 +21,6 @@ Some free supercar model from the internet, cleaned up and exported with blender
 ![Menu screen](screens/car_object_render.png?raw=true "Detailed car object exported with blender")
 
 
-# TODOS / Work in progress
-Object file loader needs further work, and most likely add an STL loader as well.
-Then work on camera in world position and making a world of multiple objects etc.
-We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
-rewriting the screen class.
-
-For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
-is the least amount of code to get a 3d cube animated on screen.
-
-Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. 
-
 # Installation
 
 This works under macos big sur:
@@ -56,27 +45,44 @@ swapped to the screen at 60 FPS.
 On mac this is the libs it is using (most should be present on basic systems):
 ```
 $ otool -L engine   
-
-engine:
-	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1311.0.0)
-	/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)
-	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio (compatibility version 1.0.0, current version 1.0.0)
-	/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox (compatibility version 1.0.0, current version 1000.0.0)
-	/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics (compatibility version 1.0.0, current version 1.0.0, weak)
-	/System/Library/Frameworks/GameController.framework/Versions/A/GameController (compatibility version 1.0.0, current version 1.0.0, weak)
-	/System/Library/Frameworks/ForceFeedback.framework/Versions/A/ForceFeedback (compatibility version 1.0.0, current version 1.0.2)
-	/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
-	/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo (compatibility version 1.2.0, current version 1.5.0)
-	/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa (compatibility version 1.0.0, current version 23.0.0)
-	/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (compatibility version 2.0.0, current version 165.0.0)
-	/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit (compatibility version 1.0.0, current version 275.0.0)
-	/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore (compatibility version 1.2.0, current version 1.11.0, weak)
-	/System/Library/Frameworks/Metal.framework/Versions/A/Metal (compatibility version 1.0.0, current version 258.17.0, weak)
-	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1200.3.0)
-	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 2113.20.111)
-	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 1856.105.0)
-	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics (compatibility version 64.0.0, current version 1557.3.2)
-	/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices (compatibility version 1.0.0, current version 1141.1.0)
-	/System/Library/Frameworks/Foundation.framework/Ve
 ```
+
+# Loading .OBJ files.
+Implemented limited .obj file loading (it has to contain triangles). However you can use blender to read any .obj file
+then go to edit mode and export triangles with cmd+T. Then export the triangulated .obj file and that mostly works fine for any
+example I tried. (Look in assets folder for some neat examples).
+
+## Example buckyball
+Soccer ball or bucky ball or truncated_icosahedron (courtesy of https://polyhedra.tessera.li)
+```
+./engine assets/truncated_icosahedron.obj
+```
+
+## Example icosahedron
+```
+./engine assets/icosahedron.obj
+```
+
+## Example teapot
+```
+./engine assets/teapot.obj
+```
+
+## Example race car
+```
+./engine assets/car.obj
+```
+
+
+# TODOS / Work in progress
+Object file loader needs further work, and most likely add an STL loader as well.
+Then work on camera in world position and making a world of multiple objects etc.
+We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
+rewriting the screen class.
+
+For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
+is the least amount of code to get a 3d cube animated on screen.
+
+Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. 
+
 
