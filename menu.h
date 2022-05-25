@@ -13,6 +13,7 @@ bugreport(log):
 
 #include "screen.h"
 #include "fonts/turbotext.h"
+#include <string>
 
 class Menu {
 
@@ -34,6 +35,8 @@ class Menu {
     //public locals
     //=============
     float x_speed, y_speed, z_speed;
+    std::string x_speed_str, y_speed_str, z_speed_str;
+
     int current_object;
     int current_viewmode;
     int render_mode;
@@ -44,6 +47,7 @@ class Menu {
     //private members:
     //================
     void init();
+    void update_speed_strings();
 
     //private locals:
     //===============

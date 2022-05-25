@@ -9,6 +9,7 @@ bugreport(log):
 =============================================================================*/
 
 #include "menu.h"
+#include <sstream>
 
 /*-----------------------------------------------------------------------------
 name        : init
@@ -43,6 +44,7 @@ Menu::Menu(Screen &scr, int object_count) {
   x_speed = 0.02;
   y_speed = 0.03;
   z_speed = 0.01;
+  update_speed_strings();
   appear(); // show menu on startup
 }
 
@@ -55,6 +57,26 @@ exceptions  :
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
 Menu::~Menu() { delete (menufont); }
+
+void Menu::update_speed_strings(){
+  // avoid near 0 value to show as some very tiny float e-23...
+  if(std::abs(x_speed)<0.000001) x_speed=0.0;
+  if(std::abs(y_speed)<0.000001) y_speed=0.0;
+  if(std::abs(z_speed)<0.000001) z_speed=0.0;
+
+  std::ostringstream oss;
+  oss << x_speed;
+  x_speed_str = oss.str();
+
+  oss.str("");
+  oss << y_speed;
+  y_speed_str = oss.str();
+
+  oss.str("");
+  oss << z_speed;
+  z_speed_str = oss.str();
+}
+
 
 void Menu::appear() {
   bAppearing = true;
@@ -117,16 +139,20 @@ void Menu::draw() {
   screen->setColor(250, 250, 255);
   
   menufont->print(30, yOffset + 15, "M     : Toggle menu");
-  menufont->print(30, yOffset + 30, "W, S  : X rotation inc, dec");
-  menufont->print(30, yOffset + 45, "A, D  : Y rotation inc, dec");
-  menufont->print(30, yOffset + 60, "Z, X  : Z rotation inc, dec");
+  menufont->print(30, yOffset + 30, "W, S  : X rotation ");
+  menufont->print(145, yOffset + 30, x_speed_str);
+  menufont->print(30, yOffset + 45, "A, D  : Y rotation ");
+  menufont->print(145, yOffset + 45, y_speed_str);
+  menufont->print(30, yOffset + 60, "Z, X  : Z rotation ");
+  menufont->print(145, yOffset + 60, z_speed_str);
+  
   menufont->print(30, yOffset + 75, "ENTER : stop rotation");
 
-  menufont->print(400, yOffset + 15,  "F      : Toggle Fullscreen mode");
-  menufont->print(400, yOffset + 30,  "ARROWS : Walk in direction of arrow");
-  menufont->print(400, yOffset + 45,  "R      : Change render mode");
-  menufont->print(400, yOffset + 60,  "P      : Previous object");
-  menufont->print(400, yOffset + 75,  "SPACE  : Next object");
+  menufont->print(menu_width-200, yOffset + 15,  "F      : Toggle Fullscreen mode");
+  menufont->print(menu_width-200, yOffset + 30,  "ARROWS : Walk in direction of arrow");
+  menufont->print(menu_width-200, yOffset + 45,  "R      : Change render mode");
+  menufont->print(menu_width-200, yOffset + 60,  "P      : Previous object");
+  menufont->print(menu_width-200, yOffset + 75,  "SPACE  : Next object");
 
   menufont->print_wavy(screen->center_x - 50, yOffset + 10, "Tiny 3d Engine");
   menufont->print(screen->center_x - 100, yOffset + 85, "Author: Walter Schreppers");
@@ -158,13 +184,16 @@ void Menu::handle_events() {
             break;
 
           case SDL_SCANCODE_Q: screen->quit(); break;
-          case SDL_SCANCODE_W: x_speed+=0.01; break;
-          case SDL_SCANCODE_S: x_speed-=0.01; break;
-          case SDL_SCANCODE_A: y_speed-=0.01; break;
-          case SDL_SCANCODE_D: y_speed+=0.01; break;
-          case SDL_SCANCODE_Z: z_speed-=0.01; break;
-          case SDL_SCANCODE_X: z_speed+=0.01; break;
-          case SDL_SCANCODE_RETURN: x_speed=y_speed=z_speed=0.0;   break;
+          case SDL_SCANCODE_W: x_speed+=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_S: x_speed-=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_A: y_speed-=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_D: y_speed+=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_Z: z_speed-=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_X: z_speed+=0.01; update_speed_strings(); break;
+          case SDL_SCANCODE_RETURN:
+            x_speed=y_speed=z_speed=0.0;
+            update_speed_strings();
+            break;
           case SDL_SCANCODE_R: render_mode = (render_mode+1) % 5; break;
           case SDL_SCANCODE_P: 
             current_object--;
