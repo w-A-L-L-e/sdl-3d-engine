@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
   Cube cube(screen);
   Torus torus(screen);
   WineGlass beker(screen);
-  // TurtleCube turtle_cube(screen);
+  TurtleCube turtle_cube(screen);
   BlenderObject cmdObject(screen); //user given commandline object (optional)
 
   std::vector<Object*> objects;
@@ -74,14 +74,16 @@ int main(int argc, char **argv) {
     cmdObject.load(argv[1], 300); // todo make scale also a command arg
     objects.push_back(&cmdObject);
   }
-
-  objects.push_back(&cube);
-  objects.push_back(&logo);
-  objects.push_back(&torus);
-  objects.push_back(&beker);
-  objects.push_back(&dodecahedron);
-  objects.push_back(&teapot);
-  //objects.push_back(&turtle_cube);
+  else{
+    objects.push_back(&cube);
+    objects.push_back(&logo);
+    objects.push_back(&torus);
+    objects.push_back(&beker);
+    objects.push_back(&turtle_cube);
+    objects.push_back(&dodecahedron);
+    objects.push_back(&teapot);
+  }
+  
 
   Menu menu(screen, objects.size());
   float ax = 0, ay = 0, az = 0;
@@ -100,11 +102,15 @@ int main(int argc, char **argv) {
     if(!menu.keypressed){ //once you press a key we stop auto switching objects
       if(next_screen_timeout-- == 0){
         next_screen_timeout = 60*timeout_seconds; //yes ugly, needs fixing here...
-        object_pos = (object_pos+1) % objects.size();
-        menu.current_object = object_pos;
-
-        if(object_pos == 0) menu.appear();
-        if(object_pos == 1) menu.hide(); 
+        if(objects.size()>1){
+          object_pos = (object_pos+1) % objects.size();
+          menu.current_object = object_pos;
+          if(object_pos == 0) menu.appear();
+          if(object_pos == 1) menu.hide(); 
+        }
+        else{
+          menu.hide();
+        }
       }
     }
 
