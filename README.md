@@ -5,8 +5,9 @@ again on my macbook pure out of nostalgia ;).
 
 # Some screenshots of what is already working
 This all rotates real time at 60FPS on my 2014 macbook with less than 10% cpu usage so not bad at all.
-The torus has over 1000 triangles. Ofcourse it peanuts to what you can do when using OpenGL or Volkan. Still
-it's already way better than what was possible on my pentium in the 90's in turbo pascal ;).
+The torus has over 1000 triangles and still easily does 60fps. Ofcourse that still is peanuts compared to what you can do when using 
+hardware accellerated OpenGL or Volkan. Still, it's already way better than what was possible 
+on my pentium in the 90's in turbo pascal ;).
 
 Title screen that also shows a menu with alpha blending:
 ![Menu screen](screens/3dlogo.png?raw=true "Simple logo drawn in 3d")
@@ -36,7 +37,12 @@ Running:
 $ ./engine
 ```
 
+# Menu keys
 Press F key to toggle fullscreen. And 'Q' to quit the demo.
+M toggles the menu on/off. A,W,S,D for x+y rotation Z,X for z rotation speed change.
+Space for next demo object and P to go to previous.
+My favorite feature here: R change render mode which can be triangles, filled triangles, edges or points (the torus looks nice as a point cloud ;)).
+
 
 The makefile statically links sdl2 and the binary for macos shows it uses 'Metal' under the hood. However
 we only use it to draw to a texture with raw pixels r,g,b,a. Everything is basically drawn using pixel(x,y) and then
