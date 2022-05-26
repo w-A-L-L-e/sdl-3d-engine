@@ -12,7 +12,7 @@ on my pentium in the 90's in turbo pascal ;).
 Title screen that also shows a menu with alpha blending:
 ![Menu screen](screens/3dlogo.png?raw=true "Simple logo drawn in 3d")
 
-Torus generated as rotation object and rendered with shading (+1000 triangles here).
+Torus generated as rotation object and rendered with shading (+1000 triangles here). Palette changed by pressing '4'
 ![Torus](screens/torus.png?raw=true "Torus with backface culling and shading with normals")
 
 Glass generated as rotation object and rendered using triangle lines
@@ -20,6 +20,9 @@ Glass generated as rotation object and rendered using triangle lines
 
 Some free supercar model from the internet, cleaned up and exported with blender
 ![Menu screen](screens/car_object_render.png?raw=true "Detailed car object exported with blender")
+
+Dodecahedron exported with blender (and changed to green palette by pressing '2'):
+![Menu screen](screens/dodecahedron.png?raw=true "Dodecahedron")
 
 
 # Installation

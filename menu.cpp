@@ -154,13 +154,14 @@ void Menu::draw() {
   
   menufont->print(30, yOffset + 75, "ENTER : stop rotation");
 
-  menufont->print(menu_width-200, yOffset + 15,  "F      : Toggle Fullscreen");
-  menufont->print(menu_width-200, yOffset + 30,  "ARROWS : Walk around");
-  menufont->print(menu_width-200, yOffset + 45,  "R      : Change render mode");
-  menufont->print(menu_width-200, yOffset + 60,  "P      : Previous object");
-  menufont->print(menu_width-200, yOffset + 75,  "SPACE  : Next object");
+  menufont->print(menu_width-190, yOffset + 15,  "F      : Toggle Fullscreen");
+  menufont->print(menu_width-190, yOffset + 30,  "ARROWS : Walk around");
+  menufont->print(menu_width-190, yOffset + 45,  "R      : Change render mode");
+  menufont->print(menu_width-190, yOffset + 60,  "P      : Previous object");
+  menufont->print(menu_width-190, yOffset + 75,  "SPACE  : Next object");
 
   menufont->print_wavy(screen->center_x - 50, yOffset + 10, "Tiny 3d Engine");
+  menufont->print(screen->center_x-80, yOffset+70, "Palette colors: 0-7");
   menufont->print(screen->center_x - 100, yOffset + 85, "Author: Walter Schreppers");
 }
 
