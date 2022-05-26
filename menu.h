@@ -40,7 +40,9 @@ class Menu {
     int current_object;
     int current_viewmode;
     int render_mode;
+    int palette_index;
     bool keypressed;
+    float distance;
 
 
   private:

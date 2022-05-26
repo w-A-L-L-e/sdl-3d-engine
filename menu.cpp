@@ -45,6 +45,9 @@ Menu::Menu(Screen &scr, int object_count) {
   y_speed = 0.03;
   z_speed = 0.01;
   update_speed_strings();
+  
+  palette_index = 0; // default to grey palette
+  distance=600; //default distance further away is smaller
   appear(); // show menu on startup
 }
 
@@ -63,6 +66,9 @@ void Menu::update_speed_strings(){
   if(std::abs(x_speed)<0.000001) x_speed=0.0;
   if(std::abs(y_speed)<0.000001) y_speed=0.0;
   if(std::abs(z_speed)<0.000001) z_speed=0.0;
+
+  if(distance>10000) distance=10000;
+  if(distance<200) distance =200;
 
   std::ostringstream oss;
   oss << x_speed;
@@ -148,8 +154,8 @@ void Menu::draw() {
   
   menufont->print(30, yOffset + 75, "ENTER : stop rotation");
 
-  menufont->print(menu_width-200, yOffset + 15,  "F      : Toggle Fullscreen mode");
-  menufont->print(menu_width-200, yOffset + 30,  "ARROWS : Walk in direction of arrow");
+  menufont->print(menu_width-200, yOffset + 15,  "F      : Toggle Fullscreen");
+  menufont->print(menu_width-200, yOffset + 30,  "ARROWS : Walk around");
   menufont->print(menu_width-200, yOffset + 45,  "R      : Change render mode");
   menufont->print(menu_width-200, yOffset + 60,  "P      : Previous object");
   menufont->print(menu_width-200, yOffset + 75,  "SPACE  : Next object");
@@ -184,12 +190,26 @@ void Menu::handle_events() {
             break;
 
           case SDL_SCANCODE_Q: screen->quit(); break;
+
+          case SDL_SCANCODE_0: palette_index=0; break;
+          case SDL_SCANCODE_1: palette_index=1; break;
+          case SDL_SCANCODE_2: palette_index=2; break;
+          case SDL_SCANCODE_3: palette_index=3; break;
+          case SDL_SCANCODE_4: palette_index=4; break;
+          case SDL_SCANCODE_5: palette_index=5; break;
+          case SDL_SCANCODE_6: palette_index=6; break;
+          case SDL_SCANCODE_7: palette_index=7; break;
+
           case SDL_SCANCODE_W: x_speed+=0.01; update_speed_strings(); break;
           case SDL_SCANCODE_S: x_speed-=0.01; update_speed_strings(); break;
           case SDL_SCANCODE_A: y_speed-=0.01; update_speed_strings(); break;
           case SDL_SCANCODE_D: y_speed+=0.01; update_speed_strings(); break;
           case SDL_SCANCODE_Z: z_speed-=0.01; update_speed_strings(); break;
           case SDL_SCANCODE_X: z_speed+=0.01; update_speed_strings(); break;
+          
+          case SDL_SCANCODE_UP:   distance /= 1.03; update_speed_strings(); break;
+          case SDL_SCANCODE_DOWN: distance *= 1.03; update_speed_strings(); break;
+
           case SDL_SCANCODE_RETURN:
             x_speed=y_speed=z_speed=0.0;
             update_speed_strings();

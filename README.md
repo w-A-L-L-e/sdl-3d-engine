@@ -91,4 +91,7 @@ is the least amount of code to get a 3d cube animated on screen.
 
 Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. 
 
+# Added features 26-05-2022
+Palettes (press keys 0-8 for different colors)
+Distance with up/down arrows (no true walking but this zooms in/out already).
 

@@ -86,6 +86,8 @@ int main(int argc, char **argv) {
   
 
   Menu menu(screen, objects.size());
+  Palette pal;
+
   float ax = 0, ay = 0, az = 0;
   int object_pos = 0;
   int timeout_seconds = 7;
@@ -119,7 +121,10 @@ int main(int argc, char **argv) {
     az += menu.z_speed;
 
     Object* current_object = objects[menu.current_object];
-    current_object->rotate(ax, ay, az);
+    current_object->rotate(ax, ay, az, true, menu.distance);
+
+    pal.setActivePalette(menu.palette_index);
+    current_object->setPalette(pal);
 
     switch(menu.render_mode){
       case 1: current_object->draw(0); break;

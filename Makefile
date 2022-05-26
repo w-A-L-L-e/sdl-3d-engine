@@ -8,7 +8,7 @@ ENGINE_OBJECTS=engine.o screen.o menu.o \
 								 objects/object.o objects/turtlecube.o \
 								 objects/cube.o objects/torus.o \
 								 objects/wineglass.o objects/wallelogo.o \
-								 objects/blenderobject.o
+								 objects/blenderobject.o palette.o
 EXECUTABLES=engine pixeldemo simple_cube_rotation triangle_test
 all: $(EXECUTABLES)
 

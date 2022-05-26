@@ -24,6 +24,7 @@ void Object::init() {
   points.clear();
   rotated_points.clear();
   edges.clear();
+  this->palette = 0;
   triangles.clear();
   rotMatrix.clear();
   for (int i = 0; i < 9; i++)
@@ -237,9 +238,11 @@ void Object::rotate_normals(std::vector<triangle> &triangles,
   }
 }
 
-void Object::project(point &p, bool perspective) {
+void Object::project(point &p, bool perspective, float distance) {
   if (perspective) {
-    float distance = 600; // smaller = closer thus more perspective skew
+    // distance 200 - 20_000 is ok, default 600
+    if(distance<200) distance=200;
+    if(distance>20000) distance=20000;
     float zoom = 650;
     p.x = (zoom * p.x) / (p.z + distance) + screen->center_x;
     p.y = (zoom * p.y) / (p.z + distance) + screen->center_y;
@@ -249,14 +252,14 @@ void Object::project(point &p, bool perspective) {
   }
 }
 
-void Object::rotate(float x, float y, float z, bool perspective_projection) {
+void Object::rotate(float x, float y, float z, bool perspective_projection, float distance) {
 
   //rotate_XYZ(rotMatrix, x,y,z); //classic way of doing it
   fast_rotateXYZ(rotMatrix, x, y, z); // fast xyz computed with wolfram
 
   for (unsigned int i = 0; i < points.size(); i++) {
     rotate_point(points[i], rotated_points[i], rotMatrix);
-    project(rotated_points[i], perspective_projection);
+    project(rotated_points[i], perspective_projection, distance);
   }
 
   rotate_normals(triangles, rotMatrix);
@@ -270,9 +273,22 @@ void Object::draw_points() {
 }
 
 void Object::draw_rotated_points() {
+  if(this->palette){
+    Color pcol = this->palette->getColor(255);
+    screen->setColor(pcol.red, pcol.green, pcol.blue);
+  }
+  else{ //greyscale manually
+    screen->setColor(255, 255, 255);
+  }
+
   for (unsigned int i = 0; i < rotated_points.size(); i++) {
     screen->pixel( rotated_points[i].x, rotated_points[i].y );
   }
+}
+
+
+void Object::setPalette(Palette& pal){
+  this->palette = &pal;
 }
 
 void Object::draw_edges(bool shading) {
@@ -288,7 +304,13 @@ void Object::draw_edges(bool shading) {
       if (col < 0)
         col = 0;
 
-      screen->setColor(col, col, col);
+      if(this->palette){
+        Color pcol = this->palette->getColor(col);
+        screen->setColor(pcol.red, pcol.green, pcol.blue);
+      }
+      else{ //greyscale manually
+        screen->setColor(col, col, col);
+      }
     }
 
     screen->line(pa.x, pa.y, pb.x, pb.y);
@@ -318,7 +340,14 @@ void Object::draw(int shading) {
     // shading == 0 -> unfilled triangle
     int c = triangles[vtriangles[i].tripos].color;
 
-    screen->setColor(c, c, c); // or use some palette index
+    if(this->palette){
+      Color pcol = this->palette->getColor(c);
+      screen->setColor(pcol.red, pcol.green, pcol.blue);
+    }
+    else{ //greyscale manually
+      screen->setColor(c, c, c);
+    }
+
     if(shading==0) screen->triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
     if(shading==1) screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
   }

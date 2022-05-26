@@ -13,6 +13,7 @@ bugreport(log):
 #include <vector>
 #include <string>
 #include "screen.h"
+#include "palette.h"
 
 struct point{
   float x,y,z;
@@ -24,14 +25,15 @@ struct edge{
 
 struct triangle{
   int a,b,c;
-  point normaal;
-  point rnormaal;
-  float middenz;
-  int color;
+  point normaal;  // normal of object
+  point rnormaal; // rotated normal
+  float middenz;  // average z value to get greyscale working
+  int color;      // value 0-255 for palette or a greyscale
   bool visible;
 };
 
-//only the visible triangles for sorting
+// only the visible triangles for sorting, painters algorithm
+// later on we might extend to a depth buffer instead
 struct vtriangle{
   int tripos;
   float middenz;
@@ -53,12 +55,13 @@ class Object {
 
     //public members
     //==============
-    void rotate(float x=0, float y=0, float z=0, bool perspective_projection=true);
+    void rotate(float x=0, float y=0, float z=0, bool perspective_projection=true, float distance=600);
     virtual void draw_points();
     virtual void draw_rotated_points();
     virtual void draw_edges(bool shading=true);
     virtual void draw(int shade_technique=0);
     virtual std::string name(){return "Object";}
+    void setPalette(Palette& p);
 
   private:
     //private members:
@@ -88,12 +91,13 @@ class Object {
     bool clockwize(const triangle& t);
     void rotate_normals(std::vector<triangle>& triangles, const std::vector<float>& rotMat);
     void rotate_point(const point& p, point& rp, const std::vector<float>& rotMat);
-    void project(point &p, bool perspective=true);
+    void project(point &p, bool perspective=true, float distance=600);
     void compute_normal_vector(triangle& t);
  
     //protected locals
     //================
     Screen* screen;
+    Palette* palette;
     std::vector<point> points;
     std::vector<point> rotated_points;
     
