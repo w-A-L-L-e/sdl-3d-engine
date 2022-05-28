@@ -41,10 +41,15 @@ $ ./engine
 ```
 
 # Menu keys
-Press F key to toggle fullscreen. And 'Q' to quit the demo.
-M toggles the menu on/off. A,W,S,D for x+y rotation Z,X for z rotation speed change.
-Space for next demo object and P to go to previous.
-My favorite feature here: R change render mode which can be triangles, filled triangles, edges or points (the torus looks nice as a point cloud ;)).
+- Press F key to toggle fullscreen. 
+- 'Q' to quit the demo.
+- M toggles the menu on/off. 
+- A,W,S,D for x+y rotation
+- Z,X for z rotation speed change.
+- 0-7 change color palette
+- arrows up/down : zoom in/out (later on this will be walk mode)
+- Space: next demo object and 'P' to go to previous.
+- R: change render mode which can be triangles, filled triangles, edges or points (the torus looks nice as a point cloud ;)).
 
 
 The makefile statically links sdl2 and the binary for macos shows it uses 'Metal' under the hood. However
@@ -139,7 +144,4 @@ is the least amount of code to get a 3d cube animated on screen.
 Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. Once we had a nice screen and fast pixel
 drawing done with SDL the porting of the old turbo pascal code was pretty easy and done in a couple of spare evenings. I did however have a nice shortcut by using wolfram to calculate the 3d xyz combined rotatation matrix. The first time I wrote the engine I did this for fixed point arithmetic and all by hand and that took me weeks. And most likely I made some mistakes or 'forgot some optimization shortcuts' I took. However the corrected matrix is included in the Object class. It seems to work well with floats. The original engine had an extra layer of complexity by multiplying everything by 256 and then shifting down to do only integer arithmetic to squeeze out a few more frames per second. However modern cpu's can rotate 16k points or more easily. The majority of render time is actually spent drawing triangles here. And most likely when the GPU/OpenGL or Metal port is made this thing should be pretty snappy ;).
 
-# Added features 26-05-2022
-Palettes (press keys 0-8 for different colors)
-Distance with up/down arrows (no true walking but this zooms in/out already).
 
