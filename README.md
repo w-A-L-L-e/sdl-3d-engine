@@ -116,7 +116,11 @@ Plane decimated to 0.1 (90% lesss triangles) and re-exported with blender:
 ![Menu screen](screens/plane_simplified.png?raw=true "Jet plane simplified/lower poly")
 
 Plane rendered with hollow triangles (wireframe mode):
-![Menu screen](screens/plane_wireframe.png?raw=true "Jet plane model")
+![Menu screen](screens/plane_wireframe.png?raw=true "Jet plane model in wireframe render mode")
+
+Simplified plane rendered with hollow triangles (wireframe mode):
+![Menu screen](screens/plane_simplified_wireframe.png?raw=true "Jet plane model simplified in wireframe render mode")
+
 
 So 162000 triangles is too much. However when we simplified the object to 'just' 16000 triangles using blender and the 'decimate' option
 it's still possible ;).
