@@ -114,6 +114,18 @@ Plane exported with blender:
 Plane rendered with hollow triangles (wireframe mode):
 ![Menu screen](screens/plane_wireframe.png?raw=true "Jet plane model")
 
+So 162000 triangles is too much. However we can simplify the object to 'just' 16000 triangles using blender and the 'decimate' option.
+With so when reduced to 10% complexity it does render again at 60fps and looks pretty similar to the original:
+
+Plane exported with blender:
+![Menu screen](screens/plane.png?raw=true "Jet plane model")
+
+When we get to Guaraud shading or phong shading and texture mapping the end result will most likely still be very smooth with
+the simplified object.
+
+Plane decimated to 0.1 (90% lesss triangles) and re-exported with blender:
+![Menu screen](screens/plane_simplified.png?raw=true "Jet plane simplified/lower poly")
+
 
 
 # TODOS / Work in progress
