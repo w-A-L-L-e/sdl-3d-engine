@@ -105,13 +105,13 @@ wine glass triangle size=704
 11803_Airplane_v1_l1 triangle size=161962
 ```
 So that's roughly 162 thousand triangles and then we slow down considerably and get less than 20fps here.
-Still, it looks pretty nice rendered in wireframe mode ;)
+Still, it looks pretty nice rendered in wireframe mode ;). Also when loading the model in blender it too suffers from low fps
+when rotating it in the editor. So even with GPU acceleration on my old laptop it doesn't rotate smoothly anymore.
 
 Plane exported with blender:
 ![Menu screen](screens/plane.png?raw=true "Jet plane model")
 
-
-However we can use blender to simplify it and then it renders again at 60fps rotating smoothly.
+However we can use blender to simplify it.
 Plane decimated to 0.1 (90% lesss triangles) and re-exported with blender:
 ![Menu screen](screens/plane_simplified.png?raw=true "Jet plane simplified/lower poly")
 
@@ -123,21 +123,21 @@ Simplified plane rendered with hollow triangles (wireframe mode):
 
 
 So 162000 triangles is too much. However when we simplified the object to 'just' 16000 triangles using blender and the 'decimate' option
-it's still possible ;).
-When we get to Guaraud shading or phong shading and texture mapping the end result will most likely still be smooth enough even with
-the simplified object.
+even this complex model spins again verry smoothly at 60fps. When we get to Guaraud shading or phong shading and texture mapping. 
+The simplified end result will most likely still be more than smooth enough (also the plane object has other defects, some triangles are missing or flipped, we see the same in blender, so it's just not that a good candidate either).
 
 # TODOS / Work in progress
-Object files are fully supported, but we only load the triangles (we don't use the normals and texture triangles yet).
-Work on camera in world position and making a world of multiple objects etc.
-We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
+- Object files are fully supported, but we only load the triangles (we don't use the normals and texture triangles yet, the engine calculates it's own normals when loading in the triangles and texture mapping is not implemented yet).
+- Work on camera in world position and making a world of multiple objects etc.
+- We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
 rewriting the screen class. In a later version I'm planning to use either Metal or OpenGL to have hardware accelleration but this will
 be on a different fork or branch as I want to keep the original 'an entire engine only using put pixel x,y' concept
 
 For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
 is the least amount of code to get a 3d cube animated on screen.
 
-Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load.
+Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. Once we had a nice screen and fast pixel
+drawing done with SDL the porting of the old turbo pascal code was pretty easy and done in a couple of spare evenings. I did however have a nice shortcut by using wolfram to calculate the 3d xyz combined rotatation matrix. The first time I wrote the engine I did this for fixed point arithmetic and all by hand and that took me weeks. And most likely I made some mistakes or 'forgot some optimization shortcuts' I took. However the corrected matrix is included in the Object class. It seems to work well with floats. The original engine had an extra layer of complexity by multiplying everything by 256 and then shifting down to do only integer arithmetic to squeeze out a few more frames per second. However modern cpu's can rotate 16k points or more easily. The majority of render time is actually spent drawing triangles here. And most likely when the GPU/OpenGL or Metal port is made this thing should be pretty snappy ;).
 
 # Added features 26-05-2022
 Palettes (press keys 0-8 for different colors)
