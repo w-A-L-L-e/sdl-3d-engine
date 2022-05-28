@@ -197,10 +197,9 @@ bool Object::clockwize(const triangle &t) {
   long xc = rotated_points[t.c].x;
   long yc = rotated_points[t.c].y;
 
-  // return ( xb*yc - yb*xc - xa*yc + ya*xc + xa*yb - ya*xb)<=0;
-  long v = xb * yc - yb * xc - xa * yc + ya * xc + xa * yb - ya * xb;
-  return v > 0;
-  // return v <= 0; // old code, but looks wrong
+  return ( xb*yc - yb*xc - xa*yc + ya*xc + xa*yb - ya*xb)<=0;
+  // long v = xb * yc - yb * xc - xa * yc + ya * xc + xa * yb - ya * xb;
+  // return v > 0;
 }
 
 // We need triangle to have : normaal, rnormaal, middenz, color index

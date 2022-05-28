@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 
   // load optional user specified object on commandline as first object 
   if(argc>1){
-    cmdObject.load(argv[1], 300); // todo make scale also a command arg
+    cmdObject.load(argv[1], 200); // todo make scale also a command arg
     objects.push_back(&cmdObject);
   }
   else{

@@ -112,29 +112,29 @@ algorithm   : manually add triangles in correct counter clockwize or clockwize d
           5    6
 -----------------------------------------------------------------------------*/
 void Cube::init_triangles(){
-  // give Counter clockwize
+  // give clockwize
   // achteraan
-  add_triangle(0,1,2);
-  add_triangle(0,2,3);
+  add_triangle(0,2,1);
+  add_triangle(0,3,2);
 
-  // vooraan (met clock tegen)
-  add_triangle(4,6,5);
-  add_triangle(4,7,6);
+  // vooraan
+  add_triangle(4,5,6);
+  add_triangle(4,6,7);
 
   // bottom
-  add_triangle(0,7,4);
-  add_triangle(0,3,7);
+  add_triangle(0,4,7);
+  add_triangle(0,7,3);
 
   //top
-  add_triangle(1,5,6);
-  add_triangle(1,6,2);
+  add_triangle(1,6,5);
+  add_triangle(1,2,6);
 
   //left 
-  add_triangle(5,1,0);
-  add_triangle(0,4,5);
+  add_triangle(5,0,1);
+  add_triangle(0,5,4);
 
   //right
-  add_triangle(7,3,2);
-  add_triangle(2,6,7);
+  add_triangle(7,2,3);
+  add_triangle(2,7,6);
 } 
 

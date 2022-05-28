@@ -103,26 +103,27 @@ void WineGlass::init_points(){
 }
 
 void WineGlass::init_triangles(){
-  std::cout<<"schil_size=" <<schil_size<<std::endl;
+  // std::cout<<"schil_size=" <<schil_size<<std::endl;
   
   int offset = 0;
   while(offset<=points.size()-schil_size){
     for(int i=offset;i<schil_size+offset;i++){
+      // add clockwize triangles like blender does it
       add_triangle(
         i%points.size(),
-        (i+1)%points.size(),
-        (schil_size+i)%points.size()
+        (schil_size+i)%points.size(),
+        (i+1)%points.size()
       );
 
       add_triangle(
         (schil_size+i)%points.size(),
-        (i+1)%points.size(),
-        (schil_size+i+1)%points.size()
+        (schil_size+i+1)%points.size(),
+        (i+1)%points.size()
       );
     }
     offset+=schil_size;
   }
 
-  std::cout<<"triangle size=" <<triangles.size()<<std::endl;
+  std::cout<<"wine glass triangle size=" <<triangles.size()<<std::endl;
 }
 

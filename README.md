@@ -82,17 +82,51 @@ Soccer ball or bucky ball or truncated_icosahedron (courtesy of https://polyhedr
 ./engine assets/car.obj
 ```
 
+# Limitations
+Because we're not using the GPU for drawing triangles, loading more complex objects like the plane.obj example slows down a lot.
+```
+./engine assets/plane.obj
+                     <<<  Tiny 3D engine >>> 
+================================================================
+Ported from turbo pascal written in 90's to c++ 
+by Walter Schreppers aka wALLe back then ;).
+
+This version uses only SDL to have 640x400 buffered screen. 
+Everything you see is coded from scratch using only pixel(x,y).
+Most likely will extend this soon to use opengl or metal.
+
+Press 'f' to toggle fullscreen and 'q' to quit.
+----------------------------------------------------------------
+
+dodecahedron triangle size=36
+./assets/teapot.obj triangle size=6320
+torus triangle size=1024
+wine glass triangle size=704
+11803_Airplane_v1_l1 triangle size=161962
+```
+So that's roughly 162 thousand triangles and then we slow down considerably and get less than 20fps here.
+Still, it looks pretty nice rendered in wireframe mode ;)
+
+Plane exported with blender:
+![Menu screen](screens/plane.png?raw=true "Jet plane model")
+
+
+Plane rendered with hollow triangles (wireframe mode):
+![Menu screen](screens/plane_wireframe.png?raw=true "Jet plane model")
+
+
 
 # TODOS / Work in progress
-Object file loader needs further work, and most likely add an STL loader as well.
-Then work on camera in world position and making a world of multiple objects etc.
+Object files are fully supported, but we only load the triangles (we don't use the normals and texture triangles yet).
+Work on camera in world position and making a world of multiple objects etc.
 We only use SDL to open a screen and then plot pixels to a texture we use as double buffer so it should be pretty portable by just
-rewriting the screen class.
+rewriting the screen class. In a later version I'm planning to use either Metal or OpenGL to have hardware accelleration but this will
+be on a different fork or branch as I want to keep the original 'an entire engine only using put pixel x,y' concept
 
 For educational purposes this is nice to learn how it all works under the hood. Especially for beginners the simple_cube_rotation.cpp example
 is the least amount of code to get a 3d cube animated on screen.
 
-Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load. 
+Most effort was spent on getting sdl to render pixels fast enough to have 60fps without any cpu load.
 
 # Added features 26-05-2022
 Palettes (press keys 0-8 for different colors)
