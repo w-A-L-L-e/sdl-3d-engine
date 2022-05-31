@@ -91,8 +91,8 @@ void Object::compute_normal_vector(triangle &t) {
 }
 
 void Object::rotateX(std::vector<float> &M, float angle) {
-  float s = std::sin(angle);
-  float c = std::cos(angle);
+  float s = std::sinf(angle);
+  float c = std::cosf(angle);
 
   M[0] = 1; M[1] = 0; M[2] = 0;
   M[3] = 0; M[4] = c; M[5] = -s;
@@ -100,8 +100,8 @@ void Object::rotateX(std::vector<float> &M, float angle) {
 }
 
 void Object::rotateY(std::vector<float> &M, float angle) {
-  float s = std::sin(angle);
-  float c = std::cos(angle);
+  float s = std::sinf(angle);
+  float c = std::cosf(angle);
 
   M[0] = c;  M[1] = 0; M[2] = s; 
   M[3] = 0;  M[4] = 1; M[5] = 0; 
@@ -109,8 +109,8 @@ void Object::rotateY(std::vector<float> &M, float angle) {
 }
 
 void Object::rotateZ(std::vector<float> &M, float angle) {
-  float s = std::sin(angle);
-  float c = std::cos(angle);
+  float s = std::sinf(angle);
+  float c = std::cosf(angle);
 
   M[0] = c; M[1] = -s; M[2] = 0;
   M[3] = s; M[4] = c;  M[5] = 0;
@@ -156,13 +156,13 @@ void Object::rotateXYZ(std::vector<float> &rotXYZ, float x, float y, float z) {
 
 void Object::fast_rotateXYZ(std::vector<float> &rotMat, float x, float y, float z) {
   using namespace std;
-  float sin_x = sin(x);
-  float sin_y = sin(y);
-  float sin_z = sin(z);
+  float sin_x = sinf(x);
+  float sin_y = sinf(y);
+  float sin_z = sinf(z);
 
-  float cos_x = cos(x);
-  float cos_y = cos(y);
-  float cos_z = cos(z);
+  float cos_x = cosf(x);
+  float cos_y = cosf(y);
+  float cos_z = cosf(z);
 
   /* combined xyz rotation matrix generated with wolfram 2022*/
   rotMat[0] = cos_y * cos_z;
@@ -264,7 +264,75 @@ void Object::rotate(float x, float y, float z, bool perspective_projection, floa
   rotate_normals(triangles, rotMatrix);
 }
 
+void Object::setShadingColor(int c){
+  if(this->palette){
+    Color pcol = this->palette->getColor(c);
+    screen->setColor(pcol.red, pcol.green, pcol.blue);
+  }
+  else{ //greyscale manually
+    screen->setColor(c, c, c);
+  }
+}
 
+void Object::draw(int shading) {
+  // sort triangles based on visible = true and middenz value
+  // this might become deprecated when we do depth buffering
+  std::vector<vtriangle> vtriangles;
+  for(unsigned int i = 0; i < triangles.size(); i++){
+    if(triangles[i].visible){
+      vtriangle vt;
+      vt.middenz = triangles[i].middenz;
+      vt.tripos = i;
+      vtriangles.push_back(vt);
+    }
+  }
+  std::sort(vtriangles.begin(), vtriangles.end());
+
+
+  for (unsigned int i = 0; i < vtriangles.size(); i++) {
+    point pa = rotated_points[triangles[vtriangles[i].tripos].a];
+    point pb = rotated_points[triangles[vtriangles[i].tripos].b];
+    point pc = rotated_points[triangles[vtriangles[i].tripos].c];
+
+    // shading == 0 -> unfilled triangle
+    int c = triangles[vtriangles[i].tripos].color;
+
+    if(shading==0){
+      screen->setColor(0,0,0);
+      screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+      setShadingColor(c);
+      screen->triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+    }
+    if(shading==1){
+      setShadingColor(c);
+      screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+    }
+  }
+
+
+  /* for drawing all triangles we can use this loop
+  for (unsigned int i = 0; i < triangles.size(); i++) {
+    point pa = rotated_points[triangles[i].a];
+    point pb = rotated_points[triangles[i].b];
+    point pc = rotated_points[triangles[i].c];
+
+    if (triangles[i].visible) {
+      // shading == 0 -> unfilled triangle
+      int c = triangles[i].color;
+
+      screen->setColor(c, c, c); // or use some palette index
+      if(shading==0) screen->triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+      if(shading==1) screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
+    }
+  }
+  */
+}
+
+
+
+
+
+// alternate drawing/render routines here, mostly useful for debugging or some old school effects:
 void Object::draw_points() {
   for (unsigned int i = 0; i < points.size(); i++) {
     screen->pixel( points[i].x, points[i].y );
@@ -316,56 +384,4 @@ void Object::draw_edges(bool shading) {
   }
 }
 
-void Object::draw(int shading) {
 
-  // sort triangles based on visible = true and middenz value
-  std::vector<vtriangle> vtriangles;
-  for(unsigned int i = 0; i < triangles.size(); i++){
-    if(triangles[i].visible){
-      vtriangle vt;
-      vt.middenz = triangles[i].middenz;
-      vt.tripos = i;
-      vtriangles.push_back(vt);
-    }
-  }
-  std::sort(vtriangles.begin(), vtriangles.end());
-
-
-  for (unsigned int i = 0; i < vtriangles.size(); i++) {
-    point pa = rotated_points[triangles[vtriangles[i].tripos].a];
-    point pb = rotated_points[triangles[vtriangles[i].tripos].b];
-    point pc = rotated_points[triangles[vtriangles[i].tripos].c];
-
-    // shading == 0 -> unfilled triangle
-    int c = triangles[vtriangles[i].tripos].color;
-
-    if(this->palette){
-      Color pcol = this->palette->getColor(c);
-      screen->setColor(pcol.red, pcol.green, pcol.blue);
-    }
-    else{ //greyscale manually
-      screen->setColor(c, c, c);
-    }
-
-    if(shading==0) screen->triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
-    if(shading==1) screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
-  }
-
-
-  /*
-  for (unsigned int i = 0; i < triangles.size(); i++) {
-    point pa = rotated_points[triangles[i].a];
-    point pb = rotated_points[triangles[i].b];
-    point pc = rotated_points[triangles[i].c];
-
-    if (triangles[i].visible) {
-      // shading == 0 -> unfilled triangle
-      int c = triangles[i].color;
-
-      screen->setColor(c, c, c); // or use some palette index
-      if(shading==0) screen->triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
-      if(shading==1) screen->fill_triangle(pa.x, pa.y, pb.x, pb.y, pc.x, pc.y);
-    }
-  }
-  */
-}

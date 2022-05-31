@@ -97,8 +97,8 @@ void BlenderObject::normalize_object(float resize) {
 }
 
 /*-----------------------------------------------------------------------------
-name        : ~BlenderObject
-description : destructor
+name        : load
+description : load in blender .obj file (wavefront format)
 parameters  :
 return      :
 exceptions  :

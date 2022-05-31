@@ -91,7 +91,7 @@ void WineGlass::init_points(){
   }
 
   schil_size = points.size();
-  rotate_schil(8); // 26 original, 16 or 8 is better
+  rotate_schil(16); // 26 original, 16 or 8 is better
 
   //scale bigger a little
   float scale=1.8;

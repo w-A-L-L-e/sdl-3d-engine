@@ -95,8 +95,9 @@ int main(int argc, char **argv) {
   //fps*seconds (this is to be re-done with timing instead...)
   int next_screen_timeout = 60*timeout_seconds;
 
+  menu.hide();
   while (screen.opened()) {
-    // screen.printFPS();
+     screen.printFPS();
     menu.handle_events();
     screen.clear();
 
@@ -136,7 +137,7 @@ int main(int argc, char **argv) {
     }
 
     screen.setColor(20, 140, 240);
-    ttext.print_wavy(10,20, current_object->name());
+    //ttext.print_wavy(10,20, current_object->name());
 
     screen.draw(false); // don't present just yet
     menu.draw();        // overlay menu on top of screen surface

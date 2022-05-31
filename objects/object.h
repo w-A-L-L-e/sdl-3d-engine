@@ -93,6 +93,8 @@ class Object {
     void rotate_point(const point& p, point& rp, const std::vector<float>& rotMat);
     void project(point &p, bool perspective=true, float distance=600);
     void compute_normal_vector(triangle& t);
+    void setShadingColor(int c);
+
  
     //protected locals
     //================
