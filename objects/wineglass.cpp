@@ -26,6 +26,11 @@ algorithm   : trivial
 void WineGlass::init(){
   init_points();
   init_triangles();
+  init_edges();
+
+  std::cout<< this->name() << " points    = " << points.size() << std::endl;
+  std::cout<< this->name() << " triangles = " << triangles.size() <<std::endl;
+  std::cout<< this->name() << " edges     = " << edges.size() << std::endl;
 }
 
 
@@ -72,50 +77,76 @@ void WineGlass::rotate_schil(int rot_amount=16){ // 26 is original
 
 
 void WineGlass::init_points(){
-  // give points in clockwize order from bottom to top
-  add_point(0,0,0);
-  add_point(-50,0,0);
-  add_point(-10,10,0);
-  add_point(-10,70,0);
-  add_point(-30,70,0);
-  add_point(-50,90,0);
-  add_point(-50,120,0);
-  add_point(-40,120,0);
-  add_point(-40,100,0);
-  add_point(-20,80,0);
-  add_point(0,80,0);
+  // glass shape (important, needs to be drawn clockwise)
 
-  // now correct center of object in space
+  // original 
+  // add_point(0,  40, 0); //inside glass, where wine normally is ;)
+  // add_point(20, 40, 0); 
+  // add_point(40, 20, 0);
+  // add_point(40, 0,  0); // top edge
+  // add_point(50, 0,  0);
+  // add_point(50, 30, 0);
+  // add_point(30, 50, 0);
+  // add_point(10, 50, 0); // stem of glass
+  // add_point(10, 110,0);
+  // add_point(50, 120,0); //foot of glass
+  // add_point(0, 120,0);  
+
+  // improved version
+  add_point(0,  45, 0); // inside glass
+  add_point(20, 40, 0); 
+  add_point(40, 25, 0);
+  add_point(45, 0,  0); // top edge
+  add_point(50, 0,  0);
+  add_point(50, 30, 0);
+  add_point(30, 50, 0);
+  add_point(10, 55, 0); // stem of glass
+  add_point(10, 110,0);
+  add_point(50, 120,0); // foot of glass
+  add_point(0, 115,0);   
+
+
+  float scale=1.8;
   for(unsigned int i=0; i<points.size(); i++){
+    // move the center of object in space
     points[i].y = points[i].y - 60.0;
+
+    // make it a little bigger
+    points[i].x = points[i].x * scale; 
+    points[i].y = points[i].y * scale; 
+    //points[i].z = points[i].z * scale; 
   }
 
   schil_size = points.size();
   rotate_schil(16); // 26 original, 16 or 8 is better
 
-  //scale bigger a little
-  float scale=1.8;
-  for(unsigned int i=0; i<points.size(); i++){
-    points[i].x = points[i].x * scale; 
-    points[i].y = points[i].y * scale; 
-    points[i].z = points[i].z * scale; 
-  }
+}
+
+void WineGlass::add_true_triangle(int a, int b, int c){
+  point ap = points[a];
+  point bp = points[b];
+  point cp = points[c];
+
+  // don't add triangle if it's a flat line
+  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
+  if( (ap.x == cp.x) && (ap.y == cp.y) ) return; 
+  if( (cp.x == bp.x) && (cp.y == bp.y) ) return; 
+
+  add_triangle(a,b,c);
 }
 
 void WineGlass::init_triangles(){
-  // std::cout<<"schil_size=" <<schil_size<<std::endl;
-  
   int offset = 0;
   while(offset<=points.size()-schil_size){
     for(int i=offset;i<schil_size+offset;i++){
-      // add clockwize triangles like blender does it
-      add_triangle(
+      // add clockwise triangles, but filter flat ones
+      add_true_triangle(
         i%points.size(),
         (schil_size+i)%points.size(),
         (i+1)%points.size()
       );
 
-      add_triangle(
+      add_true_triangle(
         (schil_size+i)%points.size(),
         (schil_size+i+1)%points.size(),
         (i+1)%points.size()
@@ -123,7 +154,38 @@ void WineGlass::init_triangles(){
     }
     offset+=schil_size;
   }
+}
 
-  std::cout<<"wine glass triangle size=" <<triangles.size()<<std::endl;
+void WineGlass::add_true_edge(int a, int b){
+  point ap = points[a];
+  point bp = points[b];
+
+  // don't add edge if pa==pb
+  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
+
+  add_edge(a,b);
+}
+
+void WineGlass::add_edges_square(int a, int b, int c, int d){
+  add_true_edge(a,b);
+  add_true_edge(b,c);
+  add_true_edge(c,d);
+  add_true_edge(d,a);
+}
+
+void WineGlass::init_edges(){
+  int offset = 0;
+  while(offset<=points.size()-schil_size){
+    for(int i=offset;i<schil_size+offset;i++){
+      // add clockwise squares
+      add_edges_square(
+        i%points.size(),
+        (schil_size+i)%points.size(),
+        (schil_size+i+1)%points.size(),
+        (i+1)%points.size()
+      );
+    }
+    offset+=schil_size;
+  } 
 }
 

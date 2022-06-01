@@ -5,7 +5,8 @@ created       : 6/5/2022 at 22:52:26
 modified      : 
 version       : 
 copyright     : Walter Schreppers
-bugreport(log): 
+bugreport(log):  TODO remove code duplication with wineglass, by either
+a base class rotateobject or composition ...
 =============================================================================*/
 
 #include "torus.h"
@@ -25,6 +26,12 @@ algorithm   : trivial
 void Torus::init(){
   init_points();
   init_triangles();
+  init_edges();
+
+  std::cout<< this->name() << " points    = " << points.size() << std::endl;
+  std::cout<< this->name() << " triangles = " << triangles.size() <<std::endl;
+  std::cout<< this->name() << " edges     = " << edges.size() << std::endl;
+
 }
 
 
@@ -85,35 +92,109 @@ void Torus::rotate_schil(int rot_amount=8){
 
 void Torus::init_points(){
   // put first circle of points
-  // put_circle(60, 120, 26); //original
-  put_circle(60, 120, 16);
+  put_circle(60, 120, 16); //26 original
   schil_size = points.size();
 
-  // rotate_schil(16); //original like pascal engine
-  rotate_schil(8);
-  // rotate_schil(4); // still works and looks way cool ;)
+  // rotate_schil(16); // original like pascal engine
+  rotate_schil(8);  // double triangles 
+  // rotate_schil(4); 
 }
 
+
+// TODO refactor duplication, and also use these in wineglass render
+void Torus::add_true_triangle(int a, int b, int c){
+  point ap = points[a];
+  point bp = points[b];
+  point cp = points[c];
+
+  // don't add triangle if it's a flat line
+  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
+  if( (ap.x == cp.x) && (ap.y == cp.y) ) return; 
+  if( (cp.x == bp.x) && (cp.y == bp.y) ) return; 
+
+  add_triangle(a,b,c);
+}
+
+
+// this version is better because we handle last face on schil
+// seperately so the orientation of triangle slanted edge is uniform
 void Torus::init_triangles(){
-  // std::cout<<"schil_size=" <<schil_size<<std::endl;
-  
-  int offset = 0;
-  while(offset<=points.size()-schil_size){
-    for(int i=offset;i<schil_size+offset;i++){
-      add_triangle(
-        i%points.size(),
-        (schil_size+i)%points.size(),
-        (i+1)%points.size()
+  int i=0;
+  for( int offset=0; offset < points.size(); offset+=schil_size){
+    for(i=offset; i < schil_size+offset-1; i++){
+      // add clockwise triangles, but filter flat ones
+      add_true_triangle(
+        i,
+        (i + schil_size) % points.size(),
+        (i + 1)
       );
 
-      add_triangle(
-        (schil_size+i)%points.size(),
-        (schil_size+i+1)%points.size(),
-        (i+1)%points.size()
+      add_true_triangle(
+        (i + schil_size) % points.size(),
+        (i + schil_size + 1) % points.size(),
+        (i + 1)
       );
     }
-    offset+=schil_size;
-  }
 
-  std::cout<<"torus triangle size=" <<triangles.size()<<std::endl;
+    // last square of 2 tris wraps around shell
+    add_true_triangle(
+      (i + schil_size) % points.size(),
+      (offset+schil_size) % points.size(),
+      offset
+    );
+
+    add_true_triangle(
+      offset, 
+      i,
+      (i+schil_size) % points.size()
+    );
+
+  }
 }
+
+
+void Torus::add_true_edge(int a, int b){
+  point ap = points[a];
+  point bp = points[b];
+
+  // don't add edge if pa==pb
+  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
+
+  add_edge(a,b);
+}
+
+void Torus::add_edges_square(int a, int b, int c, int d){
+  add_true_edge(a,b); // top line
+  add_true_edge(b,c); // left side
+
+  // for torus we only need 2 edges to form squares (because it wraps around)
+  // however, if we want to not fully rotate it and have partial torus drawing
+  // in animation, we would add these back for nicer effect:
+  // add_true_edge(c,d); // bottom line
+  // add_true_edge(d,a); // right line
+}
+
+void Torus::init_edges(){
+  int i = 0;
+  for( int offset=0; offset < points.size(); offset+=schil_size){
+    for(i=offset; i < schil_size+offset-1; i++){
+      add_edges_square(
+        i,
+        (i + schil_size) % points.size(),
+        (i + schil_size + 1) % points.size(),
+        (i+1)
+      );
+    }
+
+    // last square of shell wraps around
+    add_edges_square(
+      i,
+      (i + schil_size) % points.size(),
+      (offset+schil_size) % points.size(),
+      offset
+    );
+
+    //if(offset == 2*schil_size) return;
+  }
+}
+

@@ -95,9 +95,9 @@ int main(int argc, char **argv) {
   //fps*seconds (this is to be re-done with timing instead...)
   int next_screen_timeout = 60*timeout_seconds;
 
-  menu.hide();
+  //menu.hide();
   while (screen.opened()) {
-     screen.printFPS();
+    // screen.printFPS();
     menu.handle_events();
     screen.clear();
 
@@ -120,6 +120,8 @@ int main(int argc, char **argv) {
     ax += menu.x_speed;
     ay += menu.y_speed;
     az += menu.z_speed;
+    // std::cout<<"ax="<<ax<<"; ay="<<ay<<"; az="<<az<<";"<<std::endl;
+    // ax=4.62001; ay=-1.59; az=0.75;
 
     Object* current_object = objects[menu.current_object];
     current_object->rotate(ax, ay, az, true, menu.distance);

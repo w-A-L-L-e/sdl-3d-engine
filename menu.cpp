@@ -37,7 +37,6 @@ Menu::Menu(Screen &scr, int object_count) {
   yOffset = screen->height;
   menufont = new TurboText(*screen);
   this->object_count = object_count;
-  this->bFullscreen = true;
   this->keypressed = false;
   current_object = 0;
   render_mode = 0; // 0 is filled triangles, 2=shaded edges
@@ -48,6 +47,7 @@ Menu::Menu(Screen &scr, int object_count) {
   
   palette_index = 0; // default to grey palette
   distance=600; //default distance further away is smaller
+  this->bFullscreen = false;
   appear(); // show menu on startup
 }
 

@@ -25,13 +25,6 @@ class WineGlass : public Object {
     //==============
     std::string name(){return "Wine Glass";}
 
-    // this object can't use edge drawing
-    void draw_edges(bool shaded){
-      if(shaded) draw(1);  // triangle outline
-      else draw(0);
-    }
-
-
   private:
     //private members:
     //================
@@ -40,6 +33,10 @@ class WineGlass : public Object {
     void rotate_schil(int rot_amount);
     void init_points();
     void init_triangles();
+    void init_edges();
+    void add_true_triangle(int a, int b, int c);
+    void add_true_edge(int a, int b);
+    void add_edges_square(int a, int b, int c, int d);
 
     //private locals:
     //===============
