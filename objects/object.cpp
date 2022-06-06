@@ -77,15 +77,9 @@ void Object::add_triangle(int a, int b, int c) {
   point cp = points[c];
 
   // don't add triangle if it's a flat line
-  if( (ap.x == bp.x) && (ap.y == bp.y) && (ap.z == bp.z) ){
-    return; 
-  }
-  if( (ap.x == cp.x) && (ap.y == cp.y) && (ap.z == cp.z) ){
-    return; 
-  }
-  if( (cp.x == bp.x) && (cp.y == bp.y) && (cp.z == bp.z) ){
-    return; 
-  }
+  if( (ap.x == bp.x) && (ap.y == bp.y) && (ap.z == bp.z) ) return; 
+  if( (ap.x == cp.x) && (ap.y == cp.y) && (ap.z == cp.z) ) return; 
+  if( (cp.x == bp.x) && (cp.y == bp.y) && (cp.z == bp.z) ) return; 
 
   triangle t = {a, b, c};
   compute_normal_vector(t);
