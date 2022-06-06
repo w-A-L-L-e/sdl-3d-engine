@@ -8,13 +8,14 @@ ENGINE_OBJECTS=screen.o menu.o \
 								 objects/object.o objects/turtlecube.o \
 								 objects/cube.o objects/torus.o \
 								 objects/wineglass.o objects/wallelogo.o \
-								 objects/blenderobject.o objects/world.o \
-								 palette.o
-EXECUTABLES= world_engine engine pixeldemo simple_cube_rotation triangle_test
+								 objects/blenderobject.o palette.o \
+								 # objects/world.o 
+EXECUTABLES= engine pixeldemo simple_cube_rotation triangle_test # world_engine
 all: $(EXECUTABLES)
 
-world_engine: $(ENGINE_OBJECTS) world_engine.o
-	$(CXX) -O2 $^ -o world_engine -Iinclude $(LIBS)
+# work in progress
+#world_engine: $(ENGINE_OBJECTS) world_engine.o
+#	$(CXX) -O2 $^ -o world_engine -Iinclude $(LIBS)
 
 engine: $(ENGINE_OBJECTS) engine.o 
 	$(CXX) -O2 $^ -o engine -Iinclude $(LIBS)

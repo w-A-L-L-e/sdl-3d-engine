@@ -9,6 +9,7 @@ bugreport(log):
 =============================================================================*/
 
 #include "cube.h"
+#include <iostream>
 
 /*-----------------------------------------------------------------------------
 name        : init
@@ -19,9 +20,11 @@ exceptions  :
 algorithm   : trivial
 -----------------------------------------------------------------------------*/
 void Cube::init(){
+  std::cout<<"init cube:"<<std::endl;
   init_points();
   init_edges();
   init_triangles();
+  std::cout<<"init cube done"<<std::endl;
 }
 
 

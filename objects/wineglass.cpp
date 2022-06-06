@@ -122,31 +122,19 @@ void WineGlass::init_points(){
 
 }
 
-void WineGlass::add_true_triangle(int a, int b, int c){
-  point ap = points[a];
-  point bp = points[b];
-  point cp = points[c];
-
-  // don't add triangle if it's a flat line
-  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
-  if( (ap.x == cp.x) && (ap.y == cp.y) ) return; 
-  if( (cp.x == bp.x) && (cp.y == bp.y) ) return; 
-
-  add_triangle(a,b,c);
-}
 
 void WineGlass::init_triangles(){
   int offset = 0;
   while(offset<=points.size()-schil_size){
     for(int i=offset;i<schil_size+offset;i++){
       // add clockwise triangles, but filter flat ones
-      add_true_triangle(
+      add_triangle(
         i%points.size(),
         (schil_size+i)%points.size(),
         (i+1)%points.size()
       );
 
-      add_true_triangle(
+      add_triangle(
         (schil_size+i)%points.size(),
         (schil_size+i+1)%points.size(),
         (i+1)%points.size()
@@ -156,21 +144,12 @@ void WineGlass::init_triangles(){
   }
 }
 
-void WineGlass::add_true_edge(int a, int b){
-  point ap = points[a];
-  point bp = points[b];
-
-  // don't add edge if pa==pb
-  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
-
-  add_edge(a,b);
-}
 
 void WineGlass::add_edges_square(int a, int b, int c, int d){
-  add_true_edge(a,b);
-  add_true_edge(b,c);
-  add_true_edge(c,d);
-  add_true_edge(d,a);
+  add_edge(a,b);
+  add_edge(b,c);
+  add_edge(c,d);
+  add_edge(d,a);
 }
 
 void WineGlass::init_edges(){

@@ -34,8 +34,6 @@ class WineGlass : public Object {
     void init_points();
     void init_triangles();
     void init_edges();
-    void add_true_triangle(int a, int b, int c);
-    void add_true_edge(int a, int b);
     void add_edges_square(int a, int b, int c, int d);
 
     //private locals:

@@ -102,20 +102,6 @@ void Torus::init_points(){
 
 
 // TODO refactor duplication, and also use these in wineglass render
-void Torus::add_true_triangle(int a, int b, int c){
-  point ap = points[a];
-  point bp = points[b];
-  point cp = points[c];
-
-  // don't add triangle if it's a flat line
-  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
-  if( (ap.x == cp.x) && (ap.y == cp.y) ) return; 
-  if( (cp.x == bp.x) && (cp.y == bp.y) ) return; 
-
-  add_triangle(a,b,c);
-}
-
-
 // this version is better because we handle last face on schil
 // seperately so the orientation of triangle slanted edge is uniform
 void Torus::init_triangles(){
@@ -123,13 +109,13 @@ void Torus::init_triangles(){
   for( int offset=0; offset < points.size(); offset+=schil_size){
     for(i=offset; i < schil_size+offset-1; i++){
       // add clockwise triangles, but filter flat ones
-      add_true_triangle(
+      add_triangle(
         i,
         (i + schil_size) % points.size(),
         (i + 1)
       );
 
-      add_true_triangle(
+      add_triangle(
         (i + schil_size) % points.size(),
         (i + schil_size + 1) % points.size(),
         (i + 1)
@@ -137,13 +123,13 @@ void Torus::init_triangles(){
     }
 
     // last square of 2 tris wraps around shell
-    add_true_triangle(
+    add_triangle(
       (i + schil_size) % points.size(),
       (offset+schil_size) % points.size(),
       offset
     );
 
-    add_true_triangle(
+    add_triangle(
       offset, 
       i,
       (i+schil_size) % points.size()
@@ -153,25 +139,16 @@ void Torus::init_triangles(){
 }
 
 
-void Torus::add_true_edge(int a, int b){
-  point ap = points[a];
-  point bp = points[b];
-
-  // don't add edge if pa==pb
-  if( (ap.x == bp.x) && (ap.y == bp.y) ) return; 
-
-  add_edge(a,b);
-}
 
 void Torus::add_edges_square(int a, int b, int c, int d){
-  add_true_edge(a,b); // top line
-  add_true_edge(b,c); // left side
+  add_edge(a,b); // top line
+  add_edge(b,c); // left side
 
   // for torus we only need 2 edges to form squares (because it wraps around)
   // however, if we want to not fully rotate it and have partial torus drawing
   // in animation, we would add these back for nicer effect:
-  // add_true_edge(c,d); // bottom line
-  // add_true_edge(d,a); // right line
+  // add_edge(c,d); // bottom line
+  // add_edge(d,a); // right line
 }
 
 void Torus::init_edges(){
