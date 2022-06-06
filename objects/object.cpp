@@ -324,14 +324,14 @@ void Object::draw(int shading) {
     }
   }
 
-
   /* for drawing all triangles we can use this loop
+   * also when depth buffer is used, we don't need above sort step
   for (unsigned int i = 0; i < triangles.size(); i++) {
     point pa = rotated_points[triangles[i].a];
     point pb = rotated_points[triangles[i].b];
     point pc = rotated_points[triangles[i].c];
 
-    if (triangles[i].visible) {
+    if (triangles[i].visible) { // back face culling
       // shading == 0 -> unfilled triangle
       int c = triangles[i].color;
 
