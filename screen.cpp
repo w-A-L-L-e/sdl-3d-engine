@@ -367,3 +367,220 @@ void Screen::fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
     }
   }
 }
+
+
+
+/*
+ * Didn't have time to rewrite my own pascal texture mapping into c++
+ * and figured someone already did it. stumbled upon this which seems to do what we need here 
+ * mostly: ...
+ *
+ * The original pascal code did about the same with a different twist:
+ * The routine was also TextureTriangle but it used GetXTri second function.
+ * and it uses u,v as well for proper perspective scaling (we used screen3 for the texture image data, as
+ * there was no SDL or OpenGL allowed back then ):
+ * https://github.com/w-A-L-L-e/sdl-3d-engine/blob/cca4aa1c4ab64f74c7f57c19c2f8ae790c84ae1b/inspiration/3dengine.pas#L874
+ *
+ * if you read the getXTri original procedure I wrote in the 90's it has a lot of similarities in below c++
+ * version. but somehow it doesn't need the w1,w2,w3. It only uses u1-u3 and v1-v3 yet I remember clearly solving the 
+ * perspective issues with it also... 
+ * https://github.com/w-A-L-L-e/sdl-3d-engine/blob/cca4aa1c4ab64f74c7f57c19c2f8ae790c84ae1b/inspiration/3dengine.pas#L642
+ * 
+ */
+ 
+
+// Didn't have time to rewrite the original pascal source here, so re-used this routine:
+// https://github.com/OneLoneCoder/olcPixelGameEngine/blob/12f634007c617e0fc3c7b8c5991f5310ea1b22b0/Extensions/olcPGEX_Graphics3D.h#L769
+
+/*  example call: 
+		{
+				TexturedTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v, t.t[0].w,
+					t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v, t.t[1].w,
+					t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v, t.t[2].w, sprTex1);
+				
+				//FillTriangle(t.p[0].x, t.p[0].y, t.p[1].x, t.p[1].y, t.p[2].x, t.p[2].y, t.sym, t.col);
+				DrawTriangle(t.p[0].x, t.p[0].y, t.p[1].x, t.p[1].y, t.p[2].x, t.p[2].y, PIXEL_SOLID, FG_WHITE);
+			}
+		}
+*/
+void Screen::texture_triangle(
+    int x1, int y1, float u1, float v1, float w1,
+		int x2, int y2, float u2, float v2, float w2,
+		int x3, int y3, float u3, float v3, float w3,
+		SDL_Texture* tex) {
+
+    // re-order points in triangle and swap along u,v,w as well
+    // we want to have y1 < y2 < y3
+		if (y2 < y1)
+		{
+      std::swap(y1, y2);
+			std::swap(x1, x2);
+			std::swap(u1, u2);
+			std::swap(v1, v2);
+			std::swap(w1, w2);
+		}
+
+		if (y3 < y1)
+		{
+      std::swap(y1, y3);
+			std::swap(x1, x3);
+			std::swap(u1, u3);
+			std::swap(v1, v3);
+			std::swap(w1, w3);
+		}
+
+		if (y3 < y2)
+		{
+      std::swap(y2, y3);
+			std::swap(x2, x3);
+			std::swap(u2, u3);
+			std::swap(v2, v3);
+			std::swap(w2, w3);
+		}
+
+		int dy1 = y2 - y1;
+		int dx1 = x2 - x1;
+		float dv1 = v2 - v1;
+		float du1 = u2 - u1;
+		float dw1 = w2 - w1;
+
+		int dy2 = y3 - y1;
+		int dx2 = x3 - x1;
+		float dv2 = v3 - v1;
+		float du2 = u3 - u1;
+		float dw2 = w3 - w1;
+
+		float tex_u, tex_v, tex_w;
+
+		float dax_step = 0, dbx_step = 0,
+			du1_step = 0, dv1_step = 0,
+			du2_step = 0, dv2_step = 0,
+			dw1_step=0, dw2_step=0;
+
+		if (dy1) dax_step = dx1 / (float)abs(dy1);
+		if (dy2) dbx_step = dx2 / (float)abs(dy2);
+
+		if (dy1) du1_step = du1 / (float)abs(dy1);
+		if (dy1) dv1_step = dv1 / (float)abs(dy1);
+		if (dy1) dw1_step = dw1 / (float)abs(dy1);
+
+		if (dy2) du2_step = du2 / (float)abs(dy2);
+		if (dy2) dv2_step = dv2 / (float)abs(dy2);
+		if (dy2) dw2_step = dw2 / (float)abs(dy2);
+
+		if (dy1)
+		{
+			for (int i = y1; i <= y2; i++)
+			{
+				int ax = x1 + (float)(i - y1) * dax_step;
+				int bx = x1 + (float)(i - y1) * dbx_step;
+
+				float tex_su = u1 + (float)(i - y1) * du1_step;
+				float tex_sv = v1 + (float)(i - y1) * dv1_step;
+				float tex_sw = w1 + (float)(i - y1) * dw1_step;
+
+				float tex_eu = u1 + (float)(i - y1) * du2_step;
+				float tex_ev = v1 + (float)(i - y1) * dv2_step;
+				float tex_ew = w1 + (float)(i - y1) * dw2_step;
+
+				if (ax > bx)
+				{
+          std::swap(ax, bx);
+					std::swap(tex_su, tex_eu);
+					std::swap(tex_sv, tex_ev);
+					std::swap(tex_sw, tex_ew);
+				}
+
+				tex_u = tex_su;
+				tex_v = tex_sv;
+				tex_w = tex_sw;
+
+				float tstep = 1.0f / ((float)(bx - ax));
+				float t = 0.0f;
+
+				for (int j = ax; j < bx; j++)
+				{
+					tex_u = (1.0f - t) * tex_su + t * tex_eu;
+					tex_v = (1.0f - t) * tex_sv + t * tex_ev;
+					tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+
+
+          //TODO: change this to use our own depth buffer , and pixel draw call
+					//if (tex_w > pDepthBuffer[i*ScreenWidth() + j])
+					//{
+					//	Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
+					//	pDepthBuffer[i*ScreenWidth() + j] = tex_w;
+					//}
+					t += tstep;
+				}
+
+			}
+		}
+
+		dy1 = y3 - y2;
+		dx1 = x3 - x2;
+		dv1 = v3 - v2;
+		du1 = u3 - u2;
+		dw1 = w3 - w2;
+
+		if (dy1) dax_step = dx1 / (float)abs(dy1);
+		if (dy2) dbx_step = dx2 / (float)abs(dy2);
+
+		du1_step = 0, dv1_step = 0;
+		if (dy1) du1_step = du1 / (float)abs(dy1);
+		if (dy1) dv1_step = dv1 / (float)abs(dy1);
+		if (dy1) dw1_step = dw1 / (float)abs(dy1);
+
+		if (dy1)
+		{
+			for (int i = y2; i <= y3; i++)
+			{
+				int ax = x2 + (float)(i - y2) * dax_step;
+				int bx = x1 + (float)(i - y1) * dbx_step;
+
+				float tex_su = u2 + (float)(i - y2) * du1_step;
+				float tex_sv = v2 + (float)(i - y2) * dv1_step;
+				float tex_sw = w2 + (float)(i - y2) * dw1_step;
+
+				float tex_eu = u1 + (float)(i - y1) * du2_step;
+				float tex_ev = v1 + (float)(i - y1) * dv2_step;
+				float tex_ew = w1 + (float)(i - y1) * dw2_step;
+
+				if (ax > bx)
+				{
+          std::swap(ax, bx);
+					std::swap(tex_su, tex_eu);
+					std::swap(tex_sv, tex_ev);
+					std::swap(tex_sw, tex_ew);
+				}
+
+				tex_u = tex_su;
+				tex_v = tex_sv;
+				tex_w = tex_sw;
+
+				float tstep = 1.0f / ((float)(bx - ax));
+				float t = 0.0f;
+
+				for (int j = ax; j < bx; j++)
+				{
+					tex_u = (1.0f - t) * tex_su + t * tex_eu;
+					tex_v = (1.0f - t) * tex_sv + t * tex_ev;
+					tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+
+          //TODO: change this to use our own depth buffer
+          //use pixel instead of draw call, and use sdl_texture source here also
+
+					//if (tex_w > pDepthBuffer[i*ScreenWidth() + j])
+					//{
+					//	Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
+					//	pDepthBuffer[i*ScreenWidth() + j] = tex_w;
+					//}
+
+
+					t += tstep;
+				}
+			}	
+		}		
+	}
+
+

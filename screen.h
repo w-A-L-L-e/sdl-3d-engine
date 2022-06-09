@@ -41,6 +41,13 @@ class Screen {
     void triangle(int x0, int y0, int x1, int y1, int x2, int y2);
     void fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2);
 
+    void texture_triangle(
+      int x1, int y1, float u1, float v1, float w1,
+		  int x2, int y2, float u2, float v2, float w2,
+		  int x3, int y3, float u3, float v3, float w3,
+		  SDL_Texture* tex
+    );
+
     void printFPS();
     void showRenderInfo();
 
