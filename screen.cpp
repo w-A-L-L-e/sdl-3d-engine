@@ -382,8 +382,9 @@ void Screen::fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
  * https://github.com/w-A-L-L-e/sdl-3d-engine/blob/cca4aa1c4ab64f74c7f57c19c2f8ae790c84ae1b/inspiration/3dengine.pas#L874
  *
  * if you read the getXTri original procedure I wrote in the 90's it has a lot of similarities in below c++
- * version. but somehow it doesn't need the w1,w2,w3. It only uses u1-u3 and v1-v3 yet I remember clearly solving the 
- * perspective issues with it also... 
+ * version. but somehow it doesn't need the w1,w2,w3. It only uses u1-u3 and v1-v3 yet I remember 
+ * solving the perspective/skewing issues with it also. My guess the ratio of skew at the end is also derived from z depth 
+ * without that extra param in the triangle objects
  * https://github.com/w-A-L-L-e/sdl-3d-engine/blob/cca4aa1c4ab64f74c7f57c19c2f8ae790c84ae1b/inspiration/3dengine.pas#L642
  * 
  */
@@ -393,16 +394,12 @@ void Screen::fill_triangle(int x0, int y0, int x1, int y1, int x2, int y2) {
 // https://github.com/OneLoneCoder/olcPixelGameEngine/blob/12f634007c617e0fc3c7b8c5991f5310ea1b22b0/Extensions/olcPGEX_Graphics3D.h#L769
 
 /*  example call: 
-		{
 				TexturedTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v, t.t[0].w,
 					t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v, t.t[1].w,
 					t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v, t.t[2].w, sprTex1);
-				
-				//FillTriangle(t.p[0].x, t.p[0].y, t.p[1].x, t.p[1].y, t.p[2].x, t.p[2].y, t.sym, t.col);
-				DrawTriangle(t.p[0].x, t.p[0].y, t.p[1].x, t.p[1].y, t.p[2].x, t.p[2].y, PIXEL_SOLID, FG_WHITE);
-			}
-		}
 */
+
+// https://caveofprogramming.com/guest-posts/animating-using-sprite-sheets.html -> inspiration on how to use a texture
 void Screen::texture_triangle(
     int x1, int y1, float u1, float v1, float w1,
 		int x2, int y2, float u2, float v2, float w2,
