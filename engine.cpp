@@ -47,9 +47,8 @@ void showAbout() {
 int main(int argc, char **argv) {
   showAbout();
 
-  // Screen screen(1280, 800, "Tiny 3D Engine", true); //still works, a bit high load with 50% cpu though ;)
-  // Screen screen(320, 200, "Tiny 3D Engine", true); // how it ran in pascal, fat pixels, menu doesn't fit ;)
-  Screen screen(640, 400, "Tiny 3D Engine", true); // best middleground, low cpu and detailed enough
+  // Screen screen(320, 200, "Tiny 3D Engine", true); // resolution as it ran in the 90's using pascal
+  Screen screen(640, 400, "Tiny 3D Engine", false); // good middleground, low cpu and detailed enough
   SDL_ShowCursor(SDL_DISABLE);
  
   TurboText ttext(screen);
@@ -102,9 +101,9 @@ int main(int argc, char **argv) {
     screen.clear();
 
     // little hackish but a quick way to animate and change objects without keypresses
-    if(!menu.keypressed){ //once you press a key we stop auto switching objects
+    if(!menu.keypressed){ // once you press a key we stop auto switching objects
       if(next_screen_timeout-- == 0){
-        next_screen_timeout = 60*timeout_seconds; //yes ugly, needs fixing here...
+        next_screen_timeout = 60*timeout_seconds;
         if(objects.size()>1){
           object_pos = (object_pos+1) % objects.size();
           menu.current_object = object_pos;
@@ -120,11 +119,14 @@ int main(int argc, char **argv) {
     ax += menu.x_speed;
     ay += menu.y_speed;
     az += menu.z_speed;
-    // std::cout<<"ax="<<ax<<"; ay="<<ay<<"; az="<<az<<";"<<std::endl;
-    // ax=4.62001; ay=-1.59; az=0.75;
 
     Object* current_object = objects[menu.current_object];
+
+    // perspective_project
     current_object->rotate(ax, ay, az, true, menu.distance);
+    
+    // parallell projection
+    // current_object->rotate(ax, ay, az, false, menu.distance);
 
     pal.setActivePalette(menu.palette_index);
     current_object->setPalette(pal);
@@ -146,7 +148,6 @@ int main(int argc, char **argv) {
 
     // now present on screen
     SDL_RenderPresent(screen.getRenderer());
-    // SDL_Delay(200); // delay for debugging
   }
 
   return 0;
