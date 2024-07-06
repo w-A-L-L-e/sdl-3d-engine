@@ -11,6 +11,8 @@ bugreport(log):
 #include "object.h"
 #include <iostream>
 #include <numeric>
+#include <vector>
+#include <bits/stdc++.h>
 
 /*-----------------------------------------------------------------------------
 name        : init
@@ -106,8 +108,8 @@ void Object::compute_normal_vector(triangle &t) {
 }
 
 void Object::rotateX(std::vector<float> &M, float angle) {
-  float s = std::sinf(angle);
-  float c = std::cosf(angle);
+  float s = sinf(angle);
+  float c = cosf(angle);
 
   M[0] = 1; M[1] = 0; M[2] = 0;
   M[3] = 0; M[4] = c; M[5] = -s;
@@ -115,8 +117,8 @@ void Object::rotateX(std::vector<float> &M, float angle) {
 }
 
 void Object::rotateY(std::vector<float> &M, float angle) {
-  float s = std::sinf(angle);
-  float c = std::cosf(angle);
+  float s = sinf(angle);
+  float c = cosf(angle);
 
   M[0] = c;  M[1] = 0; M[2] = s; 
   M[3] = 0;  M[4] = 1; M[5] = 0; 
@@ -124,8 +126,8 @@ void Object::rotateY(std::vector<float> &M, float angle) {
 }
 
 void Object::rotateZ(std::vector<float> &M, float angle) {
-  float s = std::sinf(angle);
-  float c = std::cosf(angle);
+  float s = sinf(angle);
+  float c = cosf(angle);
 
   M[0] = c; M[1] = -s; M[2] = 0;
   M[3] = s; M[4] = c;  M[5] = 0;

@@ -1,7 +1,6 @@
-# LIBS=`sdl2-config --libs`
+LIBS=`sdl2-config --libs`
 # LIBS=`sdl2-config --static-libs`
 # STATIC (/usr/local/lib/libSDL2main.a for windows might be needed)
-LIBS=/usr/local/lib/libSDL2.a -lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal
 CPPFLAGS=-I. -I objects -I fonts
 ENGINE_OBJECTS=screen.o menu.o \
 								 fonts/turbotext.o \

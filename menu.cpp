@@ -140,10 +140,8 @@ void Menu::draw() {
   }
 
   SDL_SetRenderDrawBlendMode(screen->getRenderer(), SDL_BLENDMODE_BLEND);
-  box(20, yOffset, menu_width, menu_height);
+  //box(20, yOffset, menu_width, menu_height);
 
-  screen->setColor(250, 250, 255);
-  
   menufont->print(30, yOffset + 15, "M     : Toggle menu");
   menufont->print(30, yOffset + 30, "W, S  : X rotation ");
   menufont->print(145, yOffset + 30, x_speed_str);

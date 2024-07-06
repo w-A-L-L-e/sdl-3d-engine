@@ -25,7 +25,8 @@ class Screen {
     //public members
     //==============
     void handle_events();
-    void clear(Uint32 r=0, Uint32 g=0, Uint32 b=0, Uint32 alpha=SDL_ALPHA_OPAQUE);
+    //void clear(Uint32 r=0, Uint32 g=0, Uint32 b=0, Uint32 alpha=SDL_ALPHA_OPAQUE);
+    void clear(Uint32 r=0, Uint32 g=0, Uint32 b=0, Uint32 alpha=0);
     void setFullscreen(bool fs);
     void draw(bool present=true);
     SDL_Renderer* getRenderer(){ return renderer; }

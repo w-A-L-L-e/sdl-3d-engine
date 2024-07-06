@@ -98,8 +98,8 @@ int main(int argc, char **argv) {
   //menu.hide();
   while (screen.opened()) {
     // screen.printFPS();
-    menu.handle_events();
     screen.clear();
+    menu.handle_events();
 
     // little hackish but a quick way to animate and change objects without keypresses
     if(!menu.keypressed){ //once you press a key we stop auto switching objects
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
       default: current_object->draw(1); break; // 0  draw filled shaded triangles
     }
 
-    screen.setColor(20, 140, 240);
+    screen.setColor(20, 140, 240, 0);
     //ttext.print_wavy(10,20, current_object->name());
 
     screen.draw(false); // don't present just yet
